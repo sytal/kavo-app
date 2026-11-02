@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/menu_item.dart';
 import '../../theme/app_colors.dart';
+import '../orders/checkout_screen.dart';
 
 /// Full detail view for a single dish — big hero image, name, price, tags,
 /// description, a quantity stepper and a pinned "Add to Order" button.
@@ -199,8 +200,11 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Added to your order')),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CheckoutScreen(item: item, quantity: quantity),
+                      ),
                     );
                   },
                   child: const Text('Add to Order'),

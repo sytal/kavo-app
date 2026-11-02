@@ -5,6 +5,7 @@ const List<String> menuCategories = ['Loaded Fries', 'Burgers', 'Shakes & Drinks
 const List<MenuItem> menuItems = [
   // Loaded Fries
   MenuItem(
+    id: 1,
     name: 'The Crunches Loaded',
     category: 'Loaded Fries',
     description: 'Crispy fries buried under melted cheese, beef crumble, and house sauce.',
@@ -13,6 +14,7 @@ const List<MenuItem> menuItems = [
     tags: ['Fan Favorite', 'Extra Cheese', 'Shareable'],
   ),
   MenuItem(
+    id: 2,
     name: 'Peri Peri Fries',
     category: 'Loaded Fries',
     description: 'Hand-cut fries tossed in fiery peri peri spice, finished with garlic mayo.',
@@ -21,6 +23,7 @@ const List<MenuItem> menuItems = [
     tags: ['Spicy', 'Hand-Cut', 'Crowd Favorite'],
   ),
   MenuItem(
+    id: 3,
     name: 'Smoky BBQ Fries',
     category: 'Loaded Fries',
     description: 'Loaded with smoky BBQ pulled beef, cheddar drizzle, and crispy onions.',
@@ -29,6 +32,7 @@ const List<MenuItem> menuItems = [
     tags: ['Smoky', 'BBQ', 'Loaded'],
   ),
   MenuItem(
+    id: 4,
     name: 'Classic Salted Fries',
     category: 'Loaded Fries',
     description: 'Golden, crispy, and simple — the fries that started it all.',
@@ -39,6 +43,7 @@ const List<MenuItem> menuItems = [
 
   // Burgers
   MenuItem(
+    id: 5,
     name: 'Crunches Signature Stack',
     category: 'Burgers',
     description: 'Double beef patty, melted cheese, caramelized onions, house special sauce.',
@@ -47,6 +52,7 @@ const List<MenuItem> menuItems = [
     tags: ["Chef's Pick", 'Double Patty', 'Signature'],
   ),
   MenuItem(
+    id: 6,
     name: 'Smoky BBQ Burger',
     category: 'Burgers',
     description: 'Beef patty glazed in smoky BBQ sauce, crispy onion rings, smoked cheddar.',
@@ -55,6 +61,7 @@ const List<MenuItem> menuItems = [
     tags: ['BBQ', 'Smoked Cheddar', 'Onion Rings'],
   ),
   MenuItem(
+    id: 7,
     name: 'Zinger Crunch Burger',
     category: 'Burgers',
     description: 'Crispy fried chicken fillet, spicy mayo, fresh lettuce, toasted bun.',
@@ -63,6 +70,7 @@ const List<MenuItem> menuItems = [
     tags: ['Crispy Chicken', 'Spicy Mayo', 'Best Seller'],
   ),
   MenuItem(
+    id: 8,
     name: 'Cheese Melt Burger',
     category: 'Burgers',
     description: 'Single patty drenched in a triple-cheese blend — simple, messy, worth it.',
@@ -73,6 +81,7 @@ const List<MenuItem> menuItems = [
 
   // Shakes & Drinks
   MenuItem(
+    id: 9,
     name: 'Nutella Overload Shake',
     category: 'Shakes & Drinks',
     description: 'Thick Nutella shake, whipped cream, chocolate drizzle, crushed wafers.',
@@ -81,6 +90,7 @@ const List<MenuItem> menuItems = [
     tags: ['Nutella', 'Thick Shake', 'Indulgent'],
   ),
   MenuItem(
+    id: 10,
     name: 'Oreo Blast',
     category: 'Shakes & Drinks',
     description: 'Crushed Oreos blended into a creamy vanilla base, topped with cookie crumbs.',
@@ -89,6 +99,7 @@ const List<MenuItem> menuItems = [
     tags: ['Oreo', 'Creamy', 'Crowd Favorite'],
   ),
   MenuItem(
+    id: 11,
     name: 'Classic Lemonade',
     category: 'Shakes & Drinks',
     description: 'Fresh-squeezed lemonade, mint, and a hint of soda for the fizz.',
@@ -97,6 +108,7 @@ const List<MenuItem> menuItems = [
     tags: ['Fresh', 'Minty', 'Refreshing'],
   ),
   MenuItem(
+    id: 12,
     name: 'Iced Mocha Freeze',
     category: 'Shakes & Drinks',
     description: 'Blended cold coffee, chocolate syrup, and a cloud of whipped cream.',
@@ -107,6 +119,7 @@ const List<MenuItem> menuItems = [
 
   // Desserts
   MenuItem(
+    id: 13,
     name: 'Molten Chocolate Brownie',
     category: 'Desserts',
     description: 'Warm chocolate brownie, molten center, vanilla ice cream, chocolate drizzle.',
@@ -115,6 +128,7 @@ const List<MenuItem> menuItems = [
     tags: ["Crunches' Classic", 'Molten Center', 'Warm'],
   ),
   MenuItem(
+    id: 14,
     name: 'Nutella Waffle',
     category: 'Desserts',
     description: 'Crisp waffle loaded with Nutella, banana slices, and powdered sugar.',
@@ -123,6 +137,7 @@ const List<MenuItem> menuItems = [
     tags: ['Nutella', 'Crisp', 'Shareable'],
   ),
   MenuItem(
+    id: 15,
     name: 'Churros & Dip',
     category: 'Desserts',
     description: 'Crispy cinnamon-sugar churros served with warm chocolate dip.',

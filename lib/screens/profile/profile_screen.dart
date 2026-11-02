@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
 
+import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
+import '../auth/login_screen.dart';
+import '../info/about_screen.dart';
+import '../info/coming_soon_screen.dart';
+import '../info/contact_screen.dart';
+import '../orders/order_history_screen.dart';
 
-/// Profile tab — a mix of account placeholder, "visit us" info, and
-/// settings-style rows. No auth/backend; everything here is visual.
+/// Profile tab — account header + settings-style rows, all wired to real
+/// screens/backend now: Order History hits the live orders API, About/
+/// Contact are real static-content screens, Favorites/Notifications are
+/// honest "coming soon" placeholders (not silent no-ops), and Sign In/Out
+/// drives the shared [AuthService].
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
-        children: const [
-          _ProfileHeader(),
-          SizedBox(height: 28),
-          _VisitUsCard(),
-          SizedBox(height: 28),
-          _SettingsList(),
-          SizedBox(height: 28),
-          _SocialRow(),
-        ],
+      child: ListenableBuilder(
+        listenable: AuthService.instance,
+        builder: (context, _) {
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+            children: [
+              const _ProfileHeader(),
+              const SizedBox(height: 28),
+              const _VisitUsCard(),
+              const SizedBox(height: 28),
+              const _SettingsList(),
+              const SizedBox(height: 28),
+              const _SocialRow(),
+            ],
+          );
+        },
       ),
     );
   }
@@ -29,9 +43,17 @@ class ProfileScreen extends StatelessWidget {
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader();
 
+  Future<void> _handleSignIn(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final user = AuthService.instance.currentUser;
+
     return Row(
       children: [
         const CircleAvatar(
@@ -44,21 +66,25 @@ class _ProfileHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Welcome!', style: textTheme.titleLarge),
+              Text(user != null ? user.name : 'Welcome!', style: textTheme.titleLarge),
               const SizedBox(height: 4),
               Text(
-                'Sign in to save your favorites',
-                style: textTheme.bodySmall?.copyWith(
-                  color: AppColors.foregroundMuted,
-                ),
+                user != null ? user.email : 'Sign in to place orders',
+                style: textTheme.bodySmall?.copyWith(color: AppColors.foregroundMuted),
               ),
             ],
           ),
         ),
-        OutlinedButton(
-          onPressed: null,
-          child: const Text('Sign In'),
-        ),
+        if (user != null)
+          OutlinedButton(
+            onPressed: () => AuthService.instance.logout(),
+            child: const Text('Sign Out'),
+          )
+        else
+          OutlinedButton(
+            onPressed: () => _handleSignIn(context),
+            child: const Text('Sign In'),
+          ),
       ],
     );
   }
@@ -124,32 +150,76 @@ class _InfoRow extends StatelessWidget {
 class _SettingsList extends StatelessWidget {
   const _SettingsList();
 
-  static const _items = [
-    (Icons.receipt_long_outlined, 'Order History'),
-    (Icons.favorite_border, 'Favorites'),
-    (Icons.notifications_none_rounded, 'Notifications'),
-    (Icons.info_outline, 'About Crunches Cafe'),
-    (Icons.mail_outline, 'Contact Us'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final items = <_SettingsItem>[
+      _SettingsItem(
+        Icons.receipt_long_outlined,
+        'Order History',
+        onTap: () async {
+          if (!AuthService.instance.isAuthenticated) {
+            final signedIn = await Navigator.of(context).push<bool>(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+            if (signedIn != true || !context.mounted) return;
+          }
+          if (!context.mounted) return;
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const OrderHistoryScreen()),
+          );
+        },
+      ),
+      _SettingsItem(
+        Icons.favorite_border,
+        'Favorites',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const ComingSoonScreen(title: 'Favorites', icon: Icons.favorite_border),
+          ),
+        ),
+      ),
+      _SettingsItem(
+        Icons.notifications_none_rounded,
+        'Notifications',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) =>
+                const ComingSoonScreen(title: 'Notifications', icon: Icons.notifications_none_rounded),
+          ),
+        ),
+      ),
+      _SettingsItem(
+        Icons.info_outline,
+        'About Crunches Cafe',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const AboutScreen()),
+        ),
+      ),
+      _SettingsItem(
+        Icons.mail_outline,
+        'Contact Us',
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const ContactScreen()),
+        ),
+      ),
+    ];
+
     return Card(
       child: Column(
         children: [
-          for (int i = 0; i < _items.length; i++)
+          for (int i = 0; i < items.length; i++)
             Column(
               children: [
                 ListTile(
-                  leading: Icon(_items[i].$1, color: AppColors.gold),
-                  title: Text(_items[i].$2),
+                  leading: Icon(items[i].icon, color: AppColors.gold),
+                  title: Text(items[i].label),
                   trailing: const Icon(
                     Icons.chevron_right,
                     color: AppColors.foregroundMuted,
                   ),
-                  onTap: () {},
+                  onTap: items[i].onTap,
                 ),
-                if (i != _items.length - 1)
+                if (i != items.length - 1)
                   const Divider(height: 1, color: AppColors.border),
               ],
             ),
@@ -157,6 +227,14 @@ class _SettingsList extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SettingsItem {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  _SettingsItem(this.icon, this.label, {required this.onTap});
 }
 
 class _SocialRow extends StatelessWidget {
