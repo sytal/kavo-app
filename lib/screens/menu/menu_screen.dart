@@ -122,10 +122,10 @@ class _MenuScreenState extends State<MenuScreen> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 16,
                         crossAxisSpacing: 16,
-                        // 0.62 was too tight for a 2-line name + price + tag
-                        // chip under the 130px image, overflowing the card
-                        // by ~39px (visible as a yellow/black debug stripe).
-                        childAspectRatio: 0.54,
+                        // Matched to the card's actual content height (110px
+                        // image + fixed-height name/price/tag regions) so
+                        // there's no leftover empty space at the bottom.
+                        childAspectRatio: 0.72,
                       ),
                       itemCount: items.length,
                       itemBuilder: (context, index) {
