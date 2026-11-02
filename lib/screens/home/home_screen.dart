@@ -6,7 +6,8 @@ import '../../widgets/section_eyebrow.dart';
 
 /// Home tab — first screen users see after splash.
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final ValueChanged<int> onNavigateToTab;
+  const HomeScreen({super.key, required this.onNavigateToTab});
 
   String get _greeting {
     final hour = DateTime.now().hour;
@@ -21,11 +22,13 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: _Hero(greeting: _greeting)),
+          SliverToBoxAdapter(
+            child: _Hero(greeting: _greeting, onNavigateToTab: onNavigateToTab),
+          ),
           const SliverToBoxAdapter(child: _CraveTeaserStrip()),
-          const SliverToBoxAdapter(child: _FeaturedMenuSection()),
+          SliverToBoxAdapter(child: _FeaturedMenuSection(onNavigateToTab: onNavigateToTab)),
           const SliverToBoxAdapter(child: _AboutTeaser()),
-          const SliverToBoxAdapter(child: _ReservationCta()),
+          SliverToBoxAdapter(child: _ReservationCta(onNavigateToTab: onNavigateToTab)),
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
         ],
       ),
@@ -35,7 +38,8 @@ class HomeScreen extends StatelessWidget {
 
 class _Hero extends StatelessWidget {
   final String greeting;
-  const _Hero({required this.greeting});
+  final ValueChanged<int> onNavigateToTab;
+  const _Hero({required this.greeting, required this.onNavigateToTab});
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +92,14 @@ class _Hero extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => onNavigateToTab(2),
                         child: const Text('Reserve a Table'),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () => onNavigateToTab(1),
                         child: const Text('View Menu'),
                       ),
                     ),
@@ -213,7 +217,8 @@ class _CraveCard extends StatelessWidget {
 }
 
 class _FeaturedMenuSection extends StatelessWidget {
-  const _FeaturedMenuSection();
+  final ValueChanged<int> onNavigateToTab;
+  const _FeaturedMenuSection({required this.onNavigateToTab});
 
   @override
   Widget build(BuildContext context) {
@@ -250,8 +255,7 @@ class _FeaturedMenuSection extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              // TODO: navigate to full menu tab when wired up.
-              onPressed: () {},
+              onPressed: () => onNavigateToTab(1),
               child: const Text('View Full Menu'),
             ),
           ),
@@ -366,7 +370,8 @@ class _AboutTeaser extends StatelessWidget {
 }
 
 class _ReservationCta extends StatelessWidget {
-  const _ReservationCta();
+  final ValueChanged<int> onNavigateToTab;
+  const _ReservationCta({required this.onNavigateToTab});
 
   @override
   Widget build(BuildContext context) {
@@ -401,7 +406,7 @@ class _ReservationCta extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => onNavigateToTab(2),
                 child: const Text('Reserve a Table'),
               ),
             ),

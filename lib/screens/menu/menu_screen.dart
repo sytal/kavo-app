@@ -164,9 +164,8 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
@@ -178,10 +177,13 @@ class _CategoryChip extends StatelessWidget {
         ),
         child: Text(
           label,
+          softWrap: false,
+          overflow: TextOverflow.visible,
           style: TextStyle(
             color: selected ? AppColors.background : AppColors.foregroundMuted,
             fontWeight: FontWeight.w600,
             fontSize: 13,
+            height: 1.0,
           ),
         ),
       ),

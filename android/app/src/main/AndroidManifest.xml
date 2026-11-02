@@ -20,6 +20,13 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- Impeller's text renderer drops glyphs for certain
+                 font-weight/size combinations on some Android GPUs (seen as
+                 category-chip labels rendering as empty capsules on this
+                 device) — fall back to Skia until that's fixed upstream. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.EnableImpeller"
+              android:value="false" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

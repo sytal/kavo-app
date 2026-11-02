@@ -13,6 +13,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _loading = false;
   String? _error;
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -35,6 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final error = await AuthService.instance.register(
       _nameController.text.trim(),
       _emailController.text.trim(),
+      _phoneController.text.trim(),
       _passwordController.text,
     );
 
@@ -96,6 +99,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: const TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Email'),
                   validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  style: const TextStyle(color: AppColors.foreground),
+                  decoration: const InputDecoration(labelText: 'Phone'),
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter your phone number' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(

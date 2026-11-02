@@ -48,12 +48,12 @@ class AuthService extends ChangeNotifier {
     return null; // success
   }
 
-  Future<String?> register(String name, String email, String password) async {
+  Future<String?> register(String name, String email, String phone, String password) async {
     final res = await ApiClient.instance.post('/register', {
       'name': name,
       'email': email,
+      'phone': phone,
       'password': password,
-      'password_confirmation': password,
     });
 
     if (!res.ok) return res.errorMessage;

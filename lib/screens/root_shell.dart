@@ -17,17 +17,18 @@ class RootShell extends StatefulWidget {
 class _RootShellState extends State<RootShell> {
   int _index = 0;
 
-  final _screens = const [
-    HomeScreen(),
-    MenuScreen(),
-    ReservationsScreen(),
-    ProfileScreen(),
-  ];
+  void _goToTab(int index) => setState(() => _index = index);
 
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      HomeScreen(onNavigateToTab: _goToTab),
+      const MenuScreen(),
+      const ReservationsScreen(),
+      const ProfileScreen(),
+    ];
     return Scaffold(
-      body: IndexedStack(index: _index, children: _screens),
+      body: IndexedStack(index: _index, children: screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
