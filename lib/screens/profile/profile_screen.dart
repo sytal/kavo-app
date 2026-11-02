@@ -25,11 +25,17 @@ class ProfileScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
             children: [
-              const _ProfileHeader(),
+              // Not const: both read AuthService.instance.currentUser
+              // directly in build(), so a const instance would never
+              // rebuild when ListenableBuilder fires (Flutter skips
+              // build() on an unchanged const widget identity), leaving
+              // the header/menu stuck showing the signed-out state even
+              // after a real, successful login.
+              _ProfileHeader(),
               const SizedBox(height: 28),
               const _VisitUsCard(),
               const SizedBox(height: 28),
-              const _SettingsList(),
+              _SettingsList(),
               const SizedBox(height: 28),
               const _SocialRow(),
             ],
