@@ -179,11 +179,16 @@ class _CategoryChip extends StatelessWidget {
           label,
           softWrap: false,
           overflow: TextOverflow.visible,
+          textAlign: TextAlign.center,
+          textHeightBehavior: const TextHeightBehavior(
+            applyHeightToFirstAscent: false,
+            applyHeightToLastDescent: false,
+          ),
           style: TextStyle(
             color: selected ? AppColors.background : AppColors.foregroundMuted,
             fontWeight: FontWeight.w600,
             fontSize: 13,
-            height: 1.0,
+            height: 1.2,
           ),
         ),
       ),
@@ -226,14 +231,21 @@ class _MenuCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    item.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.foreground,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                  // Fixed 2-line height regardless of whether the name
+                  // actually wraps, so price/tag sit at the same y-position
+                  // on every card instead of shifting with name length.
+                  SizedBox(
+                    height: 36,
+                    child: Text(
+                      item.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.foreground,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        height: 1.3,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -245,23 +257,31 @@ class _MenuCard extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  if (item.tags.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceAlt,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Text(
-                        item.tags.first,
-                        style: const TextStyle(
-                          color: AppColors.foregroundMuted,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                  ],
+                  // Reserve the tag row's height too (even when a dish has
+                  // no tags) so every card is the same total height.
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 22,
+                    child: item.tags.isEmpty
+                        ? null
+                        : Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.surfaceAlt,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                item.tags.first,
+                                style: const TextStyle(
+                                  color: AppColors.foregroundMuted,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                  ),
                 ],
               ),
             ),

@@ -1,20 +1,81 @@
 import 'package:flutter/material.dart';
 import '../../data/menu_item.dart';
 import '../../services/auth_service.dart';
+import '../../services/cart_service.dart';
 import '../../services/order_service.dart';
 import '../../theme/app_colors.dart';
 import '../auth/login_screen.dart';
 
-/// Minimal real checkout: one dish + quantity (passed in from the dish
-/// detail screen) plus the required delivery address/phone. Placing the
-/// order requires an account — if the visitor isn't signed in, this screen
-/// sends them to [LoginScreen] first, then returns here with the dish
-/// still queued up.
-class CheckoutScreen extends StatefulWidget {
-  final MenuItem item;
+/// A single row shown in the order summary at the top of checkout.
+class CheckoutLine {
+  final String name;
   final int quantity;
+  final String priceLabel;
 
-  const CheckoutScreen({super.key, required this.item, required this.quantity});
+  const CheckoutLine({
+    required this.name,
+    required this.quantity,
+    required this.priceLabel,
+  });
+}
+
+/// Real checkout: a delivery address/phone/notes form that places an order
+/// for whatever line items are passed in — either a single dish+quantity
+/// (from the dish detail screen) or the full tray (from [CartService]).
+/// Placing the order requires an account — if the visitor isn't signed in,
+/// this screen sends them to [LoginScreen] first, then returns here with
+/// the items still queued up.
+class CheckoutScreen extends StatefulWidget {
+  /// `{menu_item_id: quantity}` sent to `OrderService.placeOrder`.
+  final Map<int, int> items;
+
+  /// What to show in the order summary card.
+  final List<CheckoutLine> summaryLines;
+
+  /// Called after the order is placed successfully (e.g. to clear the
+  /// tray). Optional — the single-dish flow doesn't need it.
+  final VoidCallback? onOrderPlaced;
+
+  const CheckoutScreen({
+    super.key,
+    required this.items,
+    required this.summaryLines,
+    this.onOrderPlaced,
+  });
+
+  /// Checkout for a single dish + quantity, as picked on the dish detail
+  /// screen.
+  factory CheckoutScreen.singleItem({
+    Key? key,
+    required MenuItem item,
+    required int quantity,
+  }) {
+    return CheckoutScreen(
+      key: key,
+      items: {item.id: quantity},
+      summaryLines: [
+        CheckoutLine(name: item.name, quantity: quantity, priceLabel: item.price),
+      ],
+    );
+  }
+
+  /// Checkout for everything currently in the tray.
+  factory CheckoutScreen.fromCart({Key? key}) {
+    final lines = CartService.instance.lines;
+    return CheckoutScreen(
+      key: key,
+      items: CartService.instance.toOrderItems(),
+      summaryLines: [
+        for (final line in lines)
+          CheckoutLine(
+            name: line.item.name,
+            quantity: line.quantity,
+            priceLabel: line.item.price,
+          ),
+      ],
+      onOrderPlaced: CartService.instance.clear,
+    );
+  }
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
