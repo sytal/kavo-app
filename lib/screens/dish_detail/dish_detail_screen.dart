@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/menu_item.dart';
+import '../../services/cart_service.dart';
 import '../../theme/app_colors.dart';
 import '../orders/checkout_screen.dart';
 
@@ -196,19 +197,34 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => CheckoutScreen(item: item, quantity: quantity),
-                      ),
-                    );
-                  },
-                  child: const Text('Add to Order'),
-                ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        CartService.instance.addItem(item, quantity: quantity);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Added $quantity × ${item.name} to tray')),
+                        );
+                      },
+                      child: const Text('Add to Tray'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CheckoutScreen.singleItem(item: item, quantity: quantity),
+                          ),
+                        );
+                      },
+                      child: const Text('Order Now'),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

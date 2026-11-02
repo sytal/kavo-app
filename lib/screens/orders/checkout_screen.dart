@@ -117,7 +117,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       deliveryAddress: _addressController.text.trim(),
       phone: _phoneController.text.trim(),
       notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-      items: {widget.item.id: widget.quantity},
+      items: widget.items,
     );
 
     if (!mounted) return;
@@ -126,17 +126,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _error = error;
       _success = error == null;
     });
+    if (_success) widget.onOrderPlaced?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    final item = widget.item;
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Checkout')),
       body: SafeArea(
-        child: _success ? _buildSuccess(context) : _buildForm(context, item),
+        child: _success ? _buildSuccess(context) : _buildForm(context),
       ),
     );
   }
@@ -168,7 +167,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget _buildForm(BuildContext context, MenuItem item) {
+  Widget _buildForm(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       child: Form(
@@ -183,15 +182,27 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.border),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      '${widget.quantity} × ${item.name}',
-                      style: Theme.of(context).textTheme.titleMedium,
+                  for (final line in widget.summaryLines)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${line.quantity} × ${line.name}',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                          Text(
+                            line.priceLabel,
+                            style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(item.price, style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700)),
                 ],
               ),
             ),

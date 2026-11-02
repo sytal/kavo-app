@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../services/cart_service.dart';
 import '../theme/app_colors.dart';
 import 'home/home_screen.dart';
 import 'menu/menu_screen.dart';
+import 'orders/cart_screen.dart';
 import 'reservations/reservations_screen.dart';
 import 'profile/profile_screen.dart';
 
@@ -29,6 +31,31 @@ class _RootShellState extends State<RootShell> {
     ];
     return Scaffold(
       body: IndexedStack(index: _index, children: screens),
+      // Persistent tray/cart button, visible over every tab. Wrapped in a
+      // `ListenableBuilder` on `CartService.instance` so the count badge
+      // rebuilds the instant `addItem`/`updateQuantity`/`removeItem` call
+      // `notifyListeners()` — no navigation or reload needed.
+      floatingActionButton: ListenableBuilder(
+        listenable: CartService.instance,
+        builder: (context, _) {
+          final count = CartService.instance.totalCount;
+          return Badge(
+            isLabelVisible: count > 0,
+            label: Text('$count'),
+            child: FloatingActionButton(
+              backgroundColor: AppColors.gold,
+              foregroundColor: AppColors.background,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CartScreen()),
+                );
+              },
+              child: const Icon(Icons.shopping_bag_outlined),
+            ),
+          );
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
