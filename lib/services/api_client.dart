@@ -12,7 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// on) `127.0.0.1` means *the phone itself*, not the dev machine, so the
 /// LAN IP of the machine running `php artisan serve` is required. An
 /// Android *emulator* (not a real device) would instead use `10.0.2.2`.
-/// Change [baseUrl] below if the backend's LAN IP changes.
+/// Change [baseUrl] below if the backend's LAN IP changes, or to the
+/// production URL once Hostinger hosting is sorted out.
 class ApiClient {
   ApiClient._();
   static final ApiClient instance = ApiClient._();

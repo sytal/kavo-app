@@ -12,9 +12,11 @@ class CartLine {
   double get lineTotal => _parsePrice(item.price) * quantity;
 
   static double _parsePrice(String price) {
-    // Prices are stored as display strings (e.g. "Rs. 450"); strip anything
-    // that isn't a digit or a decimal point before parsing.
-    final cleaned = price.replaceAll(RegExp(r'[^0-9.]'), '');
+    // Prices are stored as display strings (e.g. "Rs. 450"). The "Rs."
+    // prefix's own period must be dropped first — naively keeping every
+    // '.' in the string turns "Rs. 650" into ".650" (parsed as 0.65).
+    final withoutCurrency = price.replaceFirst(RegExp(r'^[A-Za-z\s]*\.?\s*'), '');
+    final cleaned = withoutCurrency.replaceAll(RegExp(r'[^0-9.]'), '');
     return double.tryParse(cleaned) ?? 0;
   }
 }
