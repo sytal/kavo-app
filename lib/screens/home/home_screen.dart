@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../data/menu_data.dart';
+import '../../data/menu_item.dart';
+import '../../services/menu_service.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/dish_image.dart';
 import '../../widgets/section_eyebrow.dart';
+import '../dish_detail/dish_detail_screen.dart';
 
 /// Home tab — first screen users see after splash.
 class HomeScreen extends StatelessWidget {
@@ -10,10 +13,14 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.onNavigateToTab});
 
   String get _greeting {
+    // Same hours as the website hero (resources/js/lib/timeOfDay.js), so
+    // 1–5 AM says "Good Night", not "Good Morning".
     final hour = DateTime.now().hour;
+    if (hour < 5) return 'Good Night';
     if (hour < 12) return 'Good Morning';
     if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour < 21) return 'Good Evening';
+    return 'Good Night';
   }
 
   @override
@@ -29,7 +36,8 @@ class HomeScreen extends StatelessWidget {
           SliverToBoxAdapter(child: _FeaturedMenuSection(onNavigateToTab: onNavigateToTab)),
           const SliverToBoxAdapter(child: _AboutTeaser()),
           SliverToBoxAdapter(child: _ReservationCta(onNavigateToTab: onNavigateToTab)),
-          const SliverToBoxAdapter(child: SizedBox(height: 32)),
+          // Room for the floating cart button at the end of the page.
+          const SliverToBoxAdapter(child: SizedBox(height: 96)),
         ],
       ),
     );
@@ -150,7 +158,9 @@ class _CraveTeaserStrip extends StatelessWidget {
             height: 180,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              // Extra right padding so the last card can scroll clear of the
+              // floating cart button.
+              padding: const EdgeInsets.fromLTRB(24, 0, 88, 0),
               itemCount: _items.length,
               itemBuilder: (context, index) {
                 final (image, caption) = _items[index];
@@ -222,7 +232,13 @@ class _FeaturedMenuSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final featured = menuItems.take(6).toList();
+    return ListenableBuilder(
+      listenable: MenuService.instance,
+      builder: (context, _) => _build(context, MenuService.instance.items.take(6).toList()),
+    );
+  }
+
+  Widget _build(BuildContext context, List<MenuItem> featured) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -241,12 +257,13 @@ class _FeaturedMenuSection extends StatelessWidget {
             height: 220,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(right: 72),
               itemCount: featured.length,
               itemBuilder: (context, index) {
                 final item = featured[index];
                 return Padding(
                   padding: const EdgeInsets.only(right: 14),
-                  child: _FeaturedMenuCard(item: item),
+                  child: _FeaturedMenuCard(key: ValueKey(item.id), item: item),
                 );
               },
             ),
@@ -266,8 +283,8 @@ class _FeaturedMenuSection extends StatelessWidget {
 }
 
 class _FeaturedMenuCard extends StatelessWidget {
-  final dynamic item;
-  const _FeaturedMenuCard({required this.item});
+  final MenuItem item;
+  const _FeaturedMenuCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -275,16 +292,19 @@ class _FeaturedMenuCard extends StatelessWidget {
       width: 160,
       child: Card(
         clipBehavior: Clip.antiAlias,
+        // Tapping a favourite opens its dish page (it used to do nothing).
+        child: InkWell(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => DishDetailScreen(item: item)),
+          ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             AspectRatio(
               aspectRatio: 1.3,
-              child: Image.asset(
-                'assets/images/${item.image}',
-                fit: BoxFit.cover,
-              ),
+              child: DishImage(item.image),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
@@ -292,7 +312,7 @@ class _FeaturedMenuCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.name as String,
+                    item.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -301,7 +321,7 @@ class _FeaturedMenuCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.price as String,
+                    item.price,
                     style: const TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w600,
@@ -312,6 +332,7 @@ class _FeaturedMenuCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

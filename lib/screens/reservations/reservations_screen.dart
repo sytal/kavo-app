@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../services/auth_service.dart';
+import '../../services/reservation_service.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/validators.dart';
 import '../../widgets/section_eyebrow.dart';
 
 /// Reservations tab — lets a guest claim a table for a given date/time.
-/// Pure UI: no backend, no persistence. A successful "save" swaps the form
-/// for a simple confirmation view, matching the sibling website's UX.
+/// The booking is sent to the backend (same endpoint as the website form),
+/// so it appears in Admin → Reservations. On success the form is swapped for
+/// a confirmation view, matching the website's UX.
 class ReservationsScreen extends StatefulWidget {
   const ReservationsScreen({super.key});
 
@@ -25,9 +29,35 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
 
   int _partySize = 2;
   bool _isSaved = false;
+  bool _submitting = false;
+  String? _error;
+
+  /// What the API needs: "YYYY-MM-DD" and 24-hour "HH:mm". The text fields
+  /// show friendlier versions ("Fri, 20 Nov 2026" / "7:30 PM").
+  String? _isoDate;
+  String? _time24;
+
+  @override
+  void initState() {
+    super.initState();
+    // Signed-in users don't have to retype their details. The saved sign-in
+    // may still be restoring when this tab is built, so also fill in once
+    // it arrives (only into fields the user hasn't typed in yet).
+    _prefillFromUser();
+    AuthService.instance.addListener(_prefillFromUser);
+  }
+
+  void _prefillFromUser() {
+    final user = AuthService.instance.currentUser;
+    if (user == null) return;
+    if (_nameController.text.isEmpty) _nameController.text = user.name;
+    if (_emailController.text.isEmpty) _emailController.text = user.email;
+    if (_phoneController.text.isEmpty) _phoneController.text = user.phone ?? '';
+  }
 
   @override
   void dispose() {
+    AuthService.instance.removeListener(_prefillFromUser);
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
@@ -46,9 +76,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       lastDate: now.add(const Duration(days: 365)),
     );
     if (picked != null) {
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       setState(() {
-        _dateController.text =
+        _isoDate =
             '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+        _dateController.text = '${days[picked.weekday - 1]}, ${picked.day} ${months[picked.month - 1]} ${picked.year}';
       });
     }
   }
@@ -58,16 +91,37 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       context: context,
       initialTime: const TimeOfDay(hour: 19, minute: 0),
     );
-    if (picked != null) {
+    if (picked != null && mounted) {
       setState(() {
+        _time24 = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
         _timeController.text = picked.format(context);
       });
     }
   }
 
-  void _saveTable() {
+  Future<void> _saveTable() async {
     if (_formKey.currentState?.validate() != true) return;
-    setState(() => _isSaved = true);
+    setState(() {
+      _submitting = true;
+      _error = null;
+    });
+
+    final error = await ReservationService.instance.book(
+      name: _nameController.text.trim(),
+      email: _emailController.text.trim(),
+      phone: _phoneController.text.trim(),
+      date: _isoDate ?? '',
+      time: _time24 ?? '',
+      partySize: _partySize,
+      requests: _notesController.text,
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _submitting = false;
+      _error = error;
+      _isSaved = error == null;
+    });
   }
 
   void _resetForm() {
@@ -80,6 +134,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       _notesController.clear();
       _partySize = 2;
       _isSaved = false;
+      _error = null;
+      _isoDate = null;
+      _time24 = null;
+      _prefillFromUser();
     });
   }
 
@@ -87,7 +145,9 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+        // Extra bottom space so the floating cart button never covers
+        // the "Save My Table" button.
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 104),
         child: _isSaved ? _ConfirmationView(
           name: _nameController.text,
           date: _dateController.text,
@@ -102,6 +162,8 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
     final textTheme = Theme.of(context).textTheme;
     return Form(
       key: _formKey,
+      // Show/clear each field's error as the user edits it, not only on submit.
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -133,8 +195,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             decoration: const InputDecoration(
               labelText: 'Where should we send confirmation?',
             ),
-            validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'Required' : null,
+            validator: Validators.email,
           ),
           const SizedBox(height: 16),
           TextFormField(
@@ -143,8 +204,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             decoration: const InputDecoration(
               labelText: 'Best number to reach you',
             ),
-            validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'Required' : null,
+            validator: (v) => Validators.phone(v),
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<int>(
@@ -188,16 +248,21 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
           TextField(
             controller: _notesController,
             maxLines: 3,
+            maxLength: 500,
             decoration: const InputDecoration(
               labelText: 'Cravings, allergies, or a celebration we should know about?',
             ),
           ),
+          if (_error != null) ...[
+            const SizedBox(height: 16),
+            Text(_error!, style: const TextStyle(color: AppColors.danger)),
+          ],
           const SizedBox(height: 28),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _saveTable,
-              child: const Text('Save My Table'),
+              onPressed: _submitting ? null : _saveTable,
+              child: Text(_submitting ? 'Saving…' : 'Save My Table'),
             ),
           ),
         ],

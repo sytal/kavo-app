@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/cart_service.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/format.dart';
 import 'checkout_screen.dart';
 
 /// The tray/cart screen: lists everything added via "Add to Tray" with
@@ -119,7 +120,7 @@ class CartScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.foreground),
                           ),
                           Text(
-                            'Rs. ${CartService.instance.totalPrice.toStringAsFixed(0)}',
+                            formatRs(CartService.instance.totalPrice),
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                   color: AppColors.gold,
                                   fontWeight: FontWeight.w700,

@@ -20,6 +20,20 @@ class ApiClient {
 
   static const String baseUrl = 'http://192.168.100.13:8011/api/v1';
 
+  /// Scheme + host + port of the backend, e.g. "http://192.168.100.13:8011".
+  static String get serverOrigin => baseUrl.replaceFirst(RegExp(r'/api/v1/?$'), '');
+
+  /// Turns an image path/URL from the API into one this device can load:
+  /// "/uploads/x.jpg" or "http://127.0.0.1:8011/uploads/x.jpg" both become
+  /// `<serverOrigin>/uploads/x.jpg`.
+  static String resolveMediaUrl(String url) {
+    if (url.startsWith('/')) return '$serverOrigin$url';
+    final uri = Uri.tryParse(url);
+    if (uri == null || !uri.hasScheme) return url;
+    final path = uri.hasQuery ? '${uri.path}?${uri.query}' : uri.path;
+    return '$serverOrigin$path';
+  }
+
   String? _token;
   bool _loaded = false;
 

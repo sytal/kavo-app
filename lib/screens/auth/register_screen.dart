@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/validators.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -61,6 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -98,15 +100,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.emailAddress,
                   style: const TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                  validator: Validators.email,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   style: const TextStyle(color: AppColors.foreground),
-                  decoration: const InputDecoration(labelText: 'Phone'),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter your phone number' : null,
+                  // Optional, same as on the website's sign-up form.
+                  decoration: const InputDecoration(labelText: 'Phone (optional)'),
+                  validator: (v) => Validators.phone(v, optional: true),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(

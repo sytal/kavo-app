@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/order.dart';
 import '../../services/order_service.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/format.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -109,8 +110,19 @@ class _OrderCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('Order #${order.id}', style: Theme.of(context).textTheme.titleMedium),
-              const Spacer(),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Order #${order.id}', style: Theme.of(context).textTheme.titleMedium),
+                    if (order.createdAt != null)
+                      Text(
+                        formatDateTime(order.createdAt!),
+                        style: const TextStyle(color: AppColors.foregroundMuted, fontSize: 12),
+                      ),
+                  ],
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
@@ -138,7 +150,7 @@ class _OrderCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Rs. ${(item.price * item.quantity).toStringAsFixed(0)}',
+                    formatRs(item.price * item.quantity),
                     style: const TextStyle(color: AppColors.foregroundMuted),
                   ),
                 ],
@@ -163,7 +175,7 @@ class _OrderCard extends StatelessWidget {
             children: [
               const Text('Total', style: TextStyle(color: AppColors.foregroundMuted)),
               Text(
-                'Rs. ${order.total.toStringAsFixed(0)}',
+                formatRs(order.total),
                 style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700, fontSize: 16),
               ),
             ],

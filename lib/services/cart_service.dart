@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../data/menu_item.dart';
+import '../utils/format.dart';
 
 /// A single line in the tray: a menu item plus how many of it the user
 /// wants to order.
@@ -9,16 +10,9 @@ class CartLine {
 
   CartLine({required this.item, required this.quantity});
 
-  double get lineTotal => _parsePrice(item.price) * quantity;
-
-  static double _parsePrice(String price) {
-    // Prices are stored as display strings (e.g. "Rs. 450"). The "Rs."
-    // prefix's own period must be dropped first — naively keeping every
-    // '.' in the string turns "Rs. 650" into ".650" (parsed as 0.65).
-    final withoutCurrency = price.replaceFirst(RegExp(r'^[A-Za-z\s]*\.?\s*'), '');
-    final cleaned = withoutCurrency.replaceAll(RegExp(r'[^0-9.]'), '');
-    return double.tryParse(cleaned) ?? 0;
-  }
+  // Prices are display strings ("Rs. 1,250"); parsePrice handles the
+  // "Rs." prefix and thousands separators.
+  double get lineTotal => parsePrice(item.price) * quantity;
 }
 
 /// App-wide tray/cart state, in-memory only (cleared on app restart or after

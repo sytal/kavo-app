@@ -35,7 +35,9 @@ class _RootShellState extends State<RootShell> {
       // `ListenableBuilder` on `CartService.instance` so the count badge
       // rebuilds the instant `addItem`/`updateQuantity`/`removeItem` call
       // `notifyListeners()` — no navigation or reload needed.
-      floatingActionButton: ListenableBuilder(
+      // Only on Home and Menu, where dishes are picked. On Reserve/Profile it
+      // sat on top of "Save My Table" and other controls.
+      floatingActionButton: _index > 1 ? null : ListenableBuilder(
         listenable: CartService.instance,
         builder: (context, _) {
           final count = CartService.instance.totalCount;

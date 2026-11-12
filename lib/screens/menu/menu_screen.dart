@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../data/menu_data.dart';
 import '../../data/menu_item.dart';
+import '../../services/menu_service.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/dish_image.dart';
 import '../../widgets/section_eyebrow.dart';
 import '../dish_detail/dish_detail_screen.dart';
 
@@ -28,19 +29,35 @@ class _MenuScreenState extends State<MenuScreen> {
     super.dispose();
   }
 
+  /// While searching, look through the WHOLE menu (name, description and
+  /// tags) regardless of the selected chip — searching "peri" from the
+  /// Desserts chip should still find Peri Peri Fries.
   List<MenuItem> get _filteredItems {
     final query = _query.trim().toLowerCase();
-    return menuItems.where((item) {
-      final matchesCategory =
-          _selectedCategory == _allLabel || item.category == _selectedCategory;
-      final matchesQuery = query.isEmpty || item.name.toLowerCase().contains(query);
-      return matchesCategory && matchesQuery;
+    return MenuService.instance.items.where((item) {
+      if (query.isNotEmpty) {
+        return item.name.toLowerCase().contains(query) ||
+            item.description.toLowerCase().contains(query) ||
+            item.tags.any((t) => t.toLowerCase().contains(query));
+      }
+      return _selectedCategory == _allLabel || item.category == _selectedCategory;
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: MenuService.instance,
+      builder: (context, _) => _buildMenu(context),
+    );
+  }
+
+  Widget _buildMenu(BuildContext context) {
     final items = _filteredItems;
+    final categories = MenuService.instance.categories;
+    if (_selectedCategory != _allLabel && !categories.contains(_selectedCategory)) {
+      _selectedCategory = _allLabel;
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -48,6 +65,7 @@ class _MenuScreenState extends State<MenuScreen> {
         title: const Text('Our Menu'),
         actions: [
           IconButton(
+            tooltip: _searching ? 'Close search' : 'Search menu',
             icon: Icon(_searching ? Icons.close : Icons.search),
             onPressed: () {
               setState(() {
@@ -86,10 +104,10 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
             SizedBox(
-              height: 48,
+              height: 60,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 children: [
                   _CategoryChip(
                     label: _allLabel,
@@ -97,7 +115,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     onTap: () => setState(() => _selectedCategory = _allLabel),
                   ),
                   const SizedBox(width: 10),
-                  for (final category in menuCategories) ...[
+                  for (final category in categories) ...[
                     _CategoryChip(
                       label: category,
                       selected: _selectedCategory == category,
@@ -109,28 +127,39 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
             Expanded(
-              child: items.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No dishes match your search',
-                        style: TextStyle(color: AppColors.foregroundMuted),
-                      ),
+              child: RefreshIndicator(
+                color: AppColors.gold,
+                onRefresh: MenuService.instance.load,
+                child: items.isEmpty
+                  ? ListView(
+                      children: const [
+                        SizedBox(height: 120),
+                        Center(
+                          child: Text(
+                            'No dishes match your search',
+                            style: TextStyle(color: AppColors.foregroundMuted),
+                          ),
+                        ),
+                      ],
                     )
                   : GridView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                      // Bottom padding keeps the last row clear of the
+                      // floating cart button.
+                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 96),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        // 2 columns on phones, 3–5 on tablets; each card has
+                        // a fixed height matched to its content (110px image
+                        // + name/price/tag rows), so no tall empty cards.
+                        maxCrossAxisExtent: 220,
+                        mainAxisExtent: 224,
                         mainAxisSpacing: 16,
                         crossAxisSpacing: 16,
-                        // Matched to the card's actual content height (110px
-                        // image + fixed-height name/price/tag regions) so
-                        // there's no leftover empty space at the bottom.
-                        childAspectRatio: 0.72,
                       ),
                       itemCount: items.length,
                       itemBuilder: (context, index) {
                         final item = items[index];
                         return _MenuCard(
+                          key: ValueKey(item.id),
                           item: item,
                           onTap: () {
                             Navigator.push(
@@ -143,6 +172,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         );
                       },
                     ),
+              ),
             ),
           ],
         ),
@@ -167,7 +197,8 @@ class _CategoryChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: selected ? AppColors.gold : AppColors.surface,
           borderRadius: BorderRadius.circular(20),
@@ -200,7 +231,7 @@ class _MenuCard extends StatelessWidget {
   final MenuItem item;
   final VoidCallback onTap;
 
-  const _MenuCard({required this.item, required this.onTap});
+  const _MenuCard({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -220,10 +251,7 @@ class _MenuCard extends StatelessWidget {
             SizedBox(
               height: 110,
               width: double.infinity,
-              child: Image.asset(
-                'assets/images/${item.image}',
-                fit: BoxFit.cover,
-              ),
+              child: DishImage(item.image),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
@@ -261,7 +289,7 @@ class _MenuCard extends StatelessWidget {
                   // no tags) so every card is the same total height.
                   const SizedBox(height: 8),
                   SizedBox(
-                    height: 22,
+                    height: 24,
                     child: item.tags.isEmpty
                         ? null
                         : Align(
@@ -274,6 +302,8 @@ class _MenuCard extends StatelessWidget {
                               ),
                               child: Text(
                                 item.tags.first,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   color: AppColors.foregroundMuted,
                                   fontSize: 10,

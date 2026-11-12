@@ -4,6 +4,8 @@ import '../../services/auth_service.dart';
 import '../../services/cart_service.dart';
 import '../../services/order_service.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/format.dart';
+import '../../utils/validators.dart';
 import '../auth/login_screen.dart';
 
 /// A single row shown in the order summary at the top of checkout.
@@ -17,6 +19,8 @@ class CheckoutLine {
     required this.quantity,
     required this.priceLabel,
   });
+
+  double get lineTotal => parsePrice(priceLabel) * quantity;
 }
 
 /// Real checkout: a delivery address/phone/notes form that places an order
@@ -89,6 +93,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _loading = false;
   String? _error;
   bool _success = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.text = AuthService.instance.currentUser?.phone ?? '';
+  }
 
   @override
   void dispose() {
@@ -172,6 +182,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -196,13 +207,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
+                          // Line total (2 × Rs. 700 = Rs. 1,400), not the unit price.
                           Text(
-                            line.priceLabel,
+                            formatRs(line.lineTotal),
                             style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
                     ),
+                  const Divider(height: 20, color: AppColors.border),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text('Total', style: TextStyle(color: AppColors.foregroundMuted)),
+                      ),
+                      Text(
+                        formatRs(widget.summaryLines.fold<double>(0, (sum, l) => sum + l.lineTotal)),
+                        style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w800, fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -232,13 +256,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               keyboardType: TextInputType.phone,
               style: const TextStyle(color: AppColors.foreground),
               decoration: const InputDecoration(labelText: 'Phone *'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Phone number is required' : null,
+              validator: (v) => Validators.phone(v),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _notesController,
               maxLines: 2,
               style: const TextStyle(color: AppColors.foreground),
+              maxLength: 1000,
               decoration: const InputDecoration(labelText: 'Notes (optional)'),
             ),
             const SizedBox(height: 24),

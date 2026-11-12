@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'services/auth_service.dart';
+import 'services/menu_service.dart';
 import 'theme/app_theme.dart';
 import 'theme/app_colors.dart';
 import 'screens/splash_screen.dart';
@@ -19,6 +20,9 @@ void main() {
   // rest of the app, so Profile/Order History reflect the right state from
   // the first frame instead of flashing "signed out" then flipping.
   AuthService.instance.bootstrap();
+  // Fetch the live menu in the background; the bundled menu shows until
+  // it arrives (or if the server can't be reached).
+  MenuService.instance.load();
   runApp(const CrunchesCafeApp());
 }
 

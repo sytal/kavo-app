@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -114,10 +115,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
+                    onPressed: () async {
+                      // After creating an account the user IS signed in, so
+                      // close this Sign In screen too and hand "signed in"
+                      // back to whoever opened it (e.g. Checkout).
+                      final created = await Navigator.of(context).push<bool>(
                         MaterialPageRoute(builder: (_) => const RegisterScreen()),
                       );
+                      if (created == true && context.mounted) {
+                        Navigator.of(context).pop(true);
+                      }
                     },
                     child: const Text(
                       "New here? Create an account",

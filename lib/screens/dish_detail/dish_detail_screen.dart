@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/menu_item.dart';
 import '../../services/cart_service.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/dish_image.dart';
 import '../orders/checkout_screen.dart';
 
 /// Full detail view for a single dish — big hero image, name, price, tags,
@@ -45,10 +46,7 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Image.asset(
-                                'assets/images/${item.image}',
-                                fit: BoxFit.cover,
-                              ),
+                              DishImage(item.image),
                               Positioned(
                                 left: 0,
                                 right: 0,
@@ -78,6 +76,7 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                             child: CircleAvatar(
                               backgroundColor: Colors.black.withValues(alpha: 0.4),
                               child: IconButton(
+                                tooltip: 'Back',
                                 icon: const Icon(Icons.arrow_back, color: AppColors.foreground),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
@@ -203,9 +202,18 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                     child: OutlinedButton(
                       onPressed: () {
                         CartService.instance.addItem(item, quantity: quantity);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Added $quantity × ${item.name} to tray')),
-                        );
+                        // Floating and lifted above the action bar, so it never
+                        // covers the "Add to Tray" / "Order Now" buttons.
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text('Added $quantity × ${item.name} to tray'),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 84),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
                       },
                       child: const Text('Add to Tray'),
                     ),
