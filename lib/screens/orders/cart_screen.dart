@@ -55,7 +55,7 @@ class CartScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     line.item.name,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: AppColors.foreground,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -63,7 +63,7 @@ class CartScreen extends StatelessWidget {
                                   const SizedBox(height: 4),
                                   Text(
                                     line.item.price,
-                                    style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700),
+                                    style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700),
                                   ),
                                 ],
                               ),
@@ -77,7 +77,7 @@ class CartScreen extends StatelessWidget {
                               child: Row(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.remove, color: AppColors.foreground, size: 18),
+                                    icon: Icon(Icons.remove, color: AppColors.foreground, size: 18),
                                     onPressed: () => CartService.instance.updateQuantity(
                                       line.item.id,
                                       line.quantity - 1,
@@ -85,10 +85,10 @@ class CartScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     '${line.quantity}',
-                                    style: const TextStyle(color: AppColors.foreground, fontWeight: FontWeight.w600),
+                                    style: TextStyle(color: AppColors.foreground, fontWeight: FontWeight.w600),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.add, color: AppColors.gold, size: 18),
+                                    icon: Icon(Icons.add, color: AppColors.gold, size: 18),
                                     onPressed: () => CartService.instance.updateQuantity(
                                       line.item.id,
                                       line.quantity + 1,
@@ -98,7 +98,7 @@ class CartScreen extends StatelessWidget {
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete_outline, color: AppColors.danger),
+                              icon: Icon(Icons.delete_outline, color: AppColors.danger),
                               onPressed: () => CartService.instance.removeItem(line.item.id),
                             ),
                           ],

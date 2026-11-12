@@ -88,9 +88,13 @@ class _MenuScreenState extends State<MenuScreen> {
                 child: TextField(
                   controller: _searchController,
                   autofocus: true,
-                  onChanged: (value) => setState(() => _query = value),
-                  style: const TextStyle(color: AppColors.foreground),
-                  decoration: const InputDecoration(
+                  // Searching covers every category, so show "All" as selected.
+                  onChanged: (value) => setState(() {
+                    _query = value;
+                    if (value.trim().isNotEmpty) _selectedCategory = _allLabel;
+                  }),
+                  style: TextStyle(color: AppColors.foreground),
+                  decoration: InputDecoration(
                     hintText: 'Search dishes...',
                     prefixIcon: Icon(Icons.search, color: AppColors.foregroundMuted),
                   ),
@@ -132,7 +136,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 onRefresh: MenuService.instance.load,
                 child: items.isEmpty
                   ? ListView(
-                      children: const [
+                      children: [
                         SizedBox(height: 120),
                         Center(
                           child: Text(
@@ -268,7 +272,7 @@ class _MenuCard extends StatelessWidget {
                       item.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.foreground,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
@@ -279,7 +283,7 @@ class _MenuCard extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     item.price,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
@@ -304,7 +308,7 @@ class _MenuCard extends StatelessWidget {
                                 item.tags.first,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.foregroundMuted,
                                   fontSize: 10,
                                 ),

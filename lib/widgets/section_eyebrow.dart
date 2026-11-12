@@ -11,7 +11,7 @@ class SectionEyebrow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.gold,
         fontSize: 11,
         fontWeight: FontWeight.w600,

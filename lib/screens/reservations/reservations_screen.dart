@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/business_service.dart';
 
 import '../../services/auth_service.dart';
 import '../../services/reservation_service.dart';
@@ -30,6 +31,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   int _partySize = 2;
   bool _isSaved = false;
   bool _submitting = false;
+  bool _triedSubmit = false;
   String? _error;
 
   /// What the API needs: "YYYY-MM-DD" and 24-hour "HH:mm". The text fields
@@ -86,20 +88,66 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
     }
   }
 
+  static String _label(String t) {
+    final p = t.split(':');
+    final h = int.parse(p[0]);
+    return '${h % 12 == 0 ? 12 : h % 12}:${p[1]} ${h >= 12 ? 'PM' : 'AM'}';
+  }
+
+  /// Fixed 30-minute slots within opening hours (Admin > Business Info);
+  /// for today, slots that have already passed are hidden.
+  List<String> _availableSlots() {
+    final b = BusinessService.instance;
+    final slots = b.timeSlots;
+    final now = DateTime.now();
+    final today = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    if (_isoDate != today) return slots;
+    final nowMin = now.hour * 60 + now.minute;
+    final openMin = (int.tryParse(b.openTime.split(':').first) ?? 13) * 60;
+    return slots.where((t) {
+      final p = t.split(':').map(int.parse).toList();
+      final m = p[0] * 60 + p[1];
+      return m < openMin ? (nowMin >= openMin || nowMin < m) : m > nowMin;
+    }).toList();
+  }
+
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(
+    final slots = _availableSlots();
+    final picked = await showModalBottomSheet<String>(
       context: context,
-      initialTime: const TimeOfDay(hour: 19, minute: 0),
+      backgroundColor: AppColors.surface,
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: slots.isEmpty
+              ? Text('No more tables today — please pick another date.', style: TextStyle(color: AppColors.foreground))
+              : SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final t in slots)
+                        ChoiceChip(
+                          label: Text(_label(t)),
+                          selected: t == _time24,
+                          onSelected: (_) => Navigator.pop(ctx, t),
+                        ),
+                    ],
+                  ),
+                ),
+        ),
+      ),
     );
     if (picked != null && mounted) {
       setState(() {
-        _time24 = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-        _timeController.text = picked.format(context);
+        _time24 = picked;
+        _timeController.text = _label(picked);
       });
     }
   }
 
   Future<void> _saveTable() async {
+    setState(() => _triedSubmit = true);
     if (_formKey.currentState?.validate() != true) return;
     setState(() {
       _submitting = true;
@@ -162,8 +210,8 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
     final textTheme = Theme.of(context).textTheme;
     return Form(
       key: _formKey,
-      // Show/clear each field's error as the user edits it, not only on submit.
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      // No errors before the first submit; after that, live as they edit.
+      autovalidateMode: _triedSubmit ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -193,9 +241,9 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(
-              labelText: 'Where should we send confirmation?',
+              labelText: 'Email (optional)',
             ),
-            validator: Validators.email,
+            validator: (v) => (v == null || v.trim().isEmpty) ? null : Validators.email(v),
           ),
           const SizedBox(height: 16),
           TextFormField(
@@ -255,7 +303,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
           ),
           if (_error != null) ...[
             const SizedBox(height: 16),
-            Text(_error!, style: const TextStyle(color: AppColors.danger)),
+            Text(_error!, style: TextStyle(color: AppColors.danger)),
           ],
           const SizedBox(height: 28),
           SizedBox(
@@ -301,7 +349,7 @@ class _ConfirmationView extends StatelessWidget {
               color: AppColors.success.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.check_rounded,
               color: AppColors.success,
               size: 40,

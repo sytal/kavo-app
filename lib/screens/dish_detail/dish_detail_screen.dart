@@ -77,7 +77,7 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                               backgroundColor: Colors.black.withValues(alpha: 0.4),
                               child: IconButton(
                                 tooltip: 'Back',
-                                icon: const Icon(Icons.arrow_back, color: AppColors.foreground),
+                                icon: Icon(Icons.arrow_back, color: AppColors.foreground),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                             ),
@@ -131,7 +131,7 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                                       ),
                                       child: Text(
                                         tag,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: AppColors.foregroundMuted,
                                           fontSize: 12,
                                         ),
@@ -167,19 +167,19 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                                 child: Row(
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.remove, color: AppColors.foreground),
+                                      icon: Icon(Icons.remove, color: AppColors.foreground),
                                       onPressed: _decr,
                                     ),
                                     Text(
                                       '$quantity',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.foreground,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16,
                                       ),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.add, color: AppColors.gold),
+                                      icon: Icon(Icons.add, color: AppColors.gold),
                                       onPressed: _incr,
                                     ),
                                   ],

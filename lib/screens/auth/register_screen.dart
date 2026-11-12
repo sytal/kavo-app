@@ -84,13 +84,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: AppColors.danger.withValues(alpha: 0.4)),
                     ),
-                    child: Text(_error!, style: const TextStyle(color: AppColors.danger)),
+                    child: Text(_error!, style: TextStyle(color: AppColors.danger)),
                   ),
                   const SizedBox(height: 16),
                 ],
                 TextFormField(
                   controller: _nameController,
-                  style: const TextStyle(color: AppColors.foreground),
+                  style: TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Name'),
                   validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
                 ),
@@ -98,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: AppColors.foreground),
+                  style: TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Email'),
                   validator: Validators.email,
                 ),
@@ -106,7 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  style: const TextStyle(color: AppColors.foreground),
+                  style: TextStyle(color: AppColors.foreground),
                   // Optional, same as on the website's sign-up form.
                   decoration: const InputDecoration(labelText: 'Phone (optional)'),
                   validator: (v) => Validators.phone(v, optional: true),
@@ -115,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  style: const TextStyle(color: AppColors.foreground),
+                  style: TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Password'),
                   validator: (v) =>
                       (v == null || v.length < 8) ? 'At least 8 characters' : null,
@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ElevatedButton(
                   onPressed: _loading ? null : _submit,
                   child: _loading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 18,
                           width: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.background),

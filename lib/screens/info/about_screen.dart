@@ -66,13 +66,13 @@ class _StatTile extends StatelessWidget {
         children: [
           Text(
             value,
-            style: const TextStyle(color: AppColors.gold, fontSize: 22, fontWeight: FontWeight.w700),
+            style: TextStyle(color: AppColors.gold, fontSize: 22, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
           Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.foregroundMuted, fontSize: 11),
+            style: TextStyle(color: AppColors.foregroundMuted, fontSize: 11),
           ),
         ],
       ),

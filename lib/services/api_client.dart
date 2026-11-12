@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +19,15 @@ class ApiClient {
   ApiClient._();
   static final ApiClient instance = ApiClient._();
 
-  static const String baseUrl = 'http://192.168.100.13:8011/api/v1';
+  /// Set per build: `flutter build apk --dart-define=API_BASE_URL=https://example.com/api/v1`.
+  /// Without it the web build talks to the host it was opened from (port
+  /// 8011), and mobile builds fall back to the dev machine's LAN address.
+  static const String _defined = String.fromEnvironment('API_BASE_URL');
+  static final String baseUrl = _defined.isNotEmpty
+      ? _defined
+      : kIsWeb
+          ? '${Uri.base.scheme}://${Uri.base.host}:8011/api/v1'
+          : 'http://192.168.100.13:8011/api/v1';
 
   /// Scheme + host + port of the backend, e.g. "http://192.168.100.13:8011".
   static String get serverOrigin => baseUrl.replaceFirst(RegExp(r'/api/v1/?$'), '');

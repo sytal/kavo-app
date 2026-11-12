@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/business_service.dart';
 import '../../data/menu_item.dart';
 import '../../services/auth_service.dart';
 import '../../services/cart_service.dart';
@@ -86,6 +87,9 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  double get _subtotal => widget.summaryLines.fold<double>(0, (sum, l) => sum + l.lineTotal);
+  double get _fee => BusinessService.instance.deliveryFee.toDouble();
+
   final _formKey = GlobalKey<FormState>();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -157,7 +161,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, color: AppColors.success, size: 56),
+            Icon(Icons.check_circle, color: AppColors.success, size: 56),
             const SizedBox(height: 16),
             Text('Order placed!', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
@@ -169,6 +173,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
+              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16)),
               child: const Text('Back to Menu'),
             ),
           ],
@@ -210,20 +215,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           // Line total (2 × Rs. 700 = Rs. 1,400), not the unit price.
                           Text(
                             formatRs(line.lineTotal),
-                            style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700),
+                            style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
                     ),
-                  const Divider(height: 20, color: AppColors.border),
+                  Divider(height: 20, color: AppColors.border),
+                  _SummaryRow('Subtotal', formatRs(_subtotal)),
+                  _SummaryRow('Delivery', _fee > 0 ? formatRs(_fee) : 'Free'),
+                  _SummaryRow('Payment', 'Cash on delivery'),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text('Total', style: TextStyle(color: AppColors.foregroundMuted)),
                       ),
                       Text(
-                        formatRs(widget.summaryLines.fold<double>(0, (sum, l) => sum + l.lineTotal)),
-                        style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w800, fontSize: 16),
+                        formatRs(_subtotal + _fee),
+                        style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.w800, fontSize: 16),
                       ),
                     ],
                   ),
@@ -239,14 +248,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: AppColors.danger.withValues(alpha: 0.4)),
                 ),
-                child: Text(_error!, style: const TextStyle(color: AppColors.danger)),
+                child: Text(_error!, style: TextStyle(color: AppColors.danger)),
               ),
               const SizedBox(height: 16),
             ],
             TextFormField(
               controller: _addressController,
               maxLines: 2,
-              style: const TextStyle(color: AppColors.foreground),
+              style: TextStyle(color: AppColors.foreground),
               decoration: const InputDecoration(labelText: 'Delivery Address *'),
               validator: (v) => (v == null || v.trim().isEmpty) ? 'Delivery address is required' : null,
             ),
@@ -254,7 +263,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             TextFormField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
-              style: const TextStyle(color: AppColors.foreground),
+              style: TextStyle(color: AppColors.foreground),
               decoration: const InputDecoration(labelText: 'Phone *'),
               validator: (v) => Validators.phone(v),
             ),
@@ -262,7 +271,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             TextFormField(
               controller: _notesController,
               maxLines: 2,
-              style: const TextStyle(color: AppColors.foreground),
+              style: TextStyle(color: AppColors.foreground),
               maxLength: 1000,
               decoration: const InputDecoration(labelText: 'Notes (optional)'),
             ),
@@ -270,7 +279,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ElevatedButton(
               onPressed: _loading ? null : _ensureSignedInThenSubmit,
               child: _loading
-                  ? const SizedBox(
+                  ? SizedBox(
                       height: 18,
                       width: 18,
                       child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.background),
@@ -282,4 +291,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
+}
+
+class _SummaryRow extends StatelessWidget {
+  final String label;
+  final String value;
+  const _SummaryRow(this.label, this.value);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Row(children: [
+          Expanded(child: Text(label, style: TextStyle(color: AppColors.foregroundMuted, fontSize: 13))),
+          Text(value, style: TextStyle(color: AppColors.foreground, fontSize: 13)),
+        ]),
+      );
 }

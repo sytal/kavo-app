@@ -41,6 +41,8 @@ class _RootShellState extends State<RootShell> {
         listenable: CartService.instance,
         builder: (context, _) {
           final count = CartService.instance.totalCount;
+          // Hidden while the tray is empty, so it doesn't cover page buttons.
+          if (count == 0) return const SizedBox.shrink();
           return Badge(
             isLabelVisible: count > 0,
             label: Text('$count'),

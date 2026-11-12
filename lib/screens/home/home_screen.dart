@@ -59,7 +59,7 @@ class _Hero extends StatelessWidget {
         children: [
           Image.asset('assets/images/hero-bg.jpg', fit: BoxFit.cover),
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -212,7 +212,7 @@ class _CraveCard extends StatelessWidget {
               bottom: 10,
               child: Text(
                 caption,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.foreground,
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
@@ -322,7 +322,7 @@ class _FeaturedMenuCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     item.price,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,

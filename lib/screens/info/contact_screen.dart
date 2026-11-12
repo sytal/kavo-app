@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../services/business_service.dart';
+import '../../utils/links.dart';
 import '../../theme/app_colors.dart';
 
 class ContactScreen extends StatelessWidget {
@@ -20,25 +22,25 @@ class ContactScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
-            const _ContactRow(
-              icon: Icons.location_on_outlined,
-              title: 'Visit Us',
-              value: 'Gulberg Thana Road, Faisalabad',
-            ),
-            const _ContactRow(
-              icon: Icons.access_time_rounded,
-              title: 'Hours',
-              value: 'Daily, 1pm – 1am',
-            ),
-            const _ContactRow(
-              icon: Icons.phone_outlined,
-              title: 'Phone',
-              value: 'Call for reservations',
-            ),
-            const _ContactRow(
-              icon: Icons.mail_outline,
-              title: 'Email',
-              value: 'hello@crunchescafe.com',
+            ListenableBuilder(
+              listenable: BusinessService.instance,
+              builder: (context, _) {
+                final b = BusinessService.instance;
+                return Column(children: [
+                  _ContactRow(icon: Icons.location_on_outlined, title: 'Visit Us', value: b.address),
+                  _ContactRow(icon: Icons.access_time_rounded, title: 'Hours', value: b.hoursLabel),
+                  if (b.phone.isNotEmpty)
+                    _ContactRow(icon: Icons.phone_outlined, title: 'Phone', value: b.phone, onTap: () => openLink(context, 'tel:${b.phone}')),
+                  if (b.whatsappUrl.isNotEmpty)
+                    _ContactRow(icon: Icons.chat_outlined, title: 'WhatsApp', value: 'Message us', onTap: () => openLink(context, b.whatsappUrl)),
+                  if (b.email.isNotEmpty)
+                    _ContactRow(icon: Icons.mail_outline, title: 'Email', value: b.email, onTap: () => openLink(context, 'mailto:${b.email}')),
+                  if (b.instagram.isNotEmpty)
+                    _ContactRow(icon: Icons.camera_alt_outlined, title: 'Instagram', value: 'Follow us', onTap: () => openLink(context, b.instagram)),
+                  if (b.facebook.isNotEmpty)
+                    _ContactRow(icon: Icons.facebook, title: 'Facebook', value: 'Like our page', onTap: () => openLink(context, b.facebook)),
+                ]);
+              },
             ),
           ],
         ),
@@ -52,11 +54,15 @@ class _ContactRow extends StatelessWidget {
   final String title;
   final String value;
 
-  const _ContactRow({required this.icon, required this.title, required this.value});
+  final VoidCallback? onTap;
+
+  const _ContactRow({required this.icon, required this.title, required this.value, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -72,14 +78,16 @@ class _ContactRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: AppColors.foregroundMuted, fontSize: 12)),
+                Text(title, style: TextStyle(color: AppColors.foregroundMuted, fontSize: 12)),
                 const SizedBox(height: 2),
-                Text(value, style: const TextStyle(color: AppColors.foreground, fontWeight: FontWeight.w600)),
+                Text(value, style: TextStyle(color: AppColors.foreground, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
+          if (onTap != null) Icon(Icons.chevron_right, color: AppColors.foregroundMuted),
         ],
       ),
+    ),
     );
   }
 }

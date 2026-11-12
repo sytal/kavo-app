@@ -10,7 +10,7 @@ const List<MenuItem> menuItems = [
     category: 'Loaded Fries',
     description: 'Crispy fries buried under melted cheese, beef crumble, and house sauce.',
     price: 'Rs. 650',
-    image: 'lobster-roll.jpg',
+    image: 'crunches-loaded.jpg',
     tags: ['Fan Favorite', 'Extra Cheese', 'Shareable'],
   ),
   MenuItem(
@@ -19,7 +19,7 @@ const List<MenuItem> menuItems = [
     category: 'Loaded Fries',
     description: 'Hand-cut fries tossed in fiery peri peri spice, finished with garlic mayo.',
     price: 'Rs. 450',
-    image: 'tuscan-grilled.jpg',
+    image: 'peri-peri-fries.jpg',
     tags: ['Spicy', 'Hand-Cut', 'Crowd Favorite'],
   ),
   MenuItem(
@@ -28,7 +28,7 @@ const List<MenuItem> menuItems = [
     category: 'Loaded Fries',
     description: 'Loaded with smoky BBQ pulled beef, cheddar drizzle, and crispy onions.',
     price: 'Rs. 700',
-    image: 'caesar.jpg',
+    image: 'smoky-bbq-fries.jpg',
     tags: ['Smoky', 'BBQ', 'Loaded'],
   ),
   MenuItem(
@@ -37,7 +37,7 @@ const List<MenuItem> menuItems = [
     category: 'Loaded Fries',
     description: 'Golden, crispy, and simple — the fries that started it all.',
     price: 'Rs. 350',
-    image: 'bread-barrel.jpg',
+    image: 'classic-salted-fries.jpg',
     tags: ['Classic', 'Crispy', 'Quick Bite'],
   ),
 
@@ -48,7 +48,7 @@ const List<MenuItem> menuItems = [
     category: 'Burgers',
     description: 'Double beef patty, melted cheese, caramelized onions, house special sauce.',
     price: 'Rs. 950',
-    image: 'about.jpg',
+    image: 'signature-stack.jpg',
     tags: ["Chef's Pick", 'Double Patty', 'Signature'],
   ),
   MenuItem(
@@ -57,7 +57,7 @@ const List<MenuItem> menuItems = [
     category: 'Burgers',
     description: 'Beef patty glazed in smoky BBQ sauce, crispy onion rings, smoked cheddar.',
     price: 'Rs. 850',
-    image: 'mozzarella.jpg',
+    image: 'smoky-bbq-burger.jpg',
     tags: ['BBQ', 'Smoked Cheddar', 'Onion Rings'],
   ),
   MenuItem(
@@ -66,7 +66,7 @@ const List<MenuItem> menuItems = [
     category: 'Burgers',
     description: 'Crispy fried chicken fillet, spicy mayo, fresh lettuce, toasted bun.',
     price: 'Rs. 800',
-    image: 'greek-salad.jpg',
+    image: 'zinger-crunch-burger.jpg',
     tags: ['Crispy Chicken', 'Spicy Mayo', 'Best Seller'],
   ),
   MenuItem(
@@ -75,7 +75,7 @@ const List<MenuItem> menuItems = [
     category: 'Burgers',
     description: 'Single patty drenched in a triple-cheese blend — simple, messy, worth it.',
     price: 'Rs. 700',
-    image: 'spinach-salad.jpg',
+    image: 'cheese-melt-burger.jpg',
     tags: ['Triple Cheese', 'Classic', 'Gooey'],
   ),
 
@@ -86,7 +86,7 @@ const List<MenuItem> menuItems = [
     category: 'Shakes & Drinks',
     description: 'Thick Nutella shake, whipped cream, chocolate drizzle, crushed wafers.',
     price: 'Rs. 550',
-    image: 'cake.jpg',
+    image: 'nutella-shake.jpg',
     tags: ['Nutella', 'Thick Shake', 'Indulgent'],
   ),
   MenuItem(
@@ -95,7 +95,7 @@ const List<MenuItem> menuItems = [
     category: 'Shakes & Drinks',
     description: 'Crushed Oreos blended into a creamy vanilla base, topped with cookie crumbs.',
     price: 'Rs. 500',
-    image: 'spinach-salad.jpg',
+    image: 'oreo-blast.jpg',
     tags: ['Oreo', 'Creamy', 'Crowd Favorite'],
   ),
   MenuItem(
@@ -104,7 +104,7 @@ const List<MenuItem> menuItems = [
     category: 'Shakes & Drinks',
     description: 'Fresh-squeezed lemonade, mint, and a hint of soda for the fizz.',
     price: 'Rs. 350',
-    image: 'lobster-bisque.jpg',
+    image: 'lemonade.jpg',
     tags: ['Fresh', 'Minty', 'Refreshing'],
   ),
   MenuItem(
@@ -113,7 +113,7 @@ const List<MenuItem> menuItems = [
     category: 'Shakes & Drinks',
     description: 'Blended cold coffee, chocolate syrup, and a cloud of whipped cream.',
     price: 'Rs. 480',
-    image: 'fire-from-wok.jpg',
+    image: 'iced-mocha.jpg',
     tags: ['Cold Coffee', 'Chocolate', 'Blended'],
   ),
 
@@ -124,7 +124,7 @@ const List<MenuItem> menuItems = [
     category: 'Desserts',
     description: 'Warm chocolate brownie, molten center, vanilla ice cream, chocolate drizzle.',
     price: 'Rs. 480',
-    image: 'cake.jpg',
+    image: 'molten-brownie.jpg',
     tags: ["Crunches' Classic", 'Molten Center', 'Warm'],
   ),
   MenuItem(
@@ -133,7 +133,7 @@ const List<MenuItem> menuItems = [
     category: 'Desserts',
     description: 'Crisp waffle loaded with Nutella, banana slices, and powdered sugar.',
     price: 'Rs. 550',
-    image: 'spinach-salad.jpg',
+    image: 'nutella-waffle.jpg',
     tags: ['Nutella', 'Crisp', 'Shareable'],
   ),
   MenuItem(
@@ -142,7 +142,7 @@ const List<MenuItem> menuItems = [
     category: 'Desserts',
     description: 'Crispy cinnamon-sugar churros served with warm chocolate dip.',
     price: 'Rs. 450',
-    image: 'lobster-bisque.jpg',
+    image: 'churros.jpg',
     tags: ['Crispy', 'Cinnamon Sugar', 'Dippable'],
   ),
 ];

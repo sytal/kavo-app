@@ -42,7 +42,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         child: RefreshIndicator(
           onRefresh: _load,
           child: _loading
-              ? const Center(child: CircularProgressIndicator(color: AppColors.gold))
+              ? Center(child: CircularProgressIndicator(color: AppColors.gold))
               : _error != null
                   ? ListView(
                       children: [
@@ -51,7 +51,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                           child: Text(
                             _error!,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: AppColors.danger),
+                            style: TextStyle(color: AppColors.danger),
                           ),
                         ),
                       ],
@@ -118,7 +118,7 @@ class _OrderCard extends StatelessWidget {
                     if (order.createdAt != null)
                       Text(
                         formatDateTime(order.createdAt!),
-                        style: const TextStyle(color: AppColors.foregroundMuted, fontSize: 12),
+                        style: TextStyle(color: AppColors.foregroundMuted, fontSize: 12),
                       ),
                   ],
                 ),
@@ -137,7 +137,7 @@ class _OrderCard extends StatelessWidget {
               ),
             ],
           ),
-          const Divider(height: 20, color: AppColors.border),
+          Divider(height: 20, color: AppColors.border),
           for (final item in order.items)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
@@ -146,25 +146,25 @@ class _OrderCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       '${item.quantity} × ${item.name}',
-                      style: const TextStyle(color: AppColors.foregroundMuted),
+                      style: TextStyle(color: AppColors.foregroundMuted),
                     ),
                   ),
                   Text(
                     formatRs(item.price * item.quantity),
-                    style: const TextStyle(color: AppColors.foregroundMuted),
+                    style: TextStyle(color: AppColors.foregroundMuted),
                   ),
                 ],
               ),
             ),
-          const Divider(height: 20, color: AppColors.border),
+          Divider(height: 20, color: AppColors.border),
           Row(
             children: [
-              const Icon(Icons.location_on_outlined, size: 16, color: AppColors.foregroundMuted),
+              Icon(Icons.location_on_outlined, size: 16, color: AppColors.foregroundMuted),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   order.deliveryAddress,
-                  style: const TextStyle(color: AppColors.foregroundMuted, fontSize: 12),
+                  style: TextStyle(color: AppColors.foregroundMuted, fontSize: 12),
                 ),
               ),
             ],
@@ -173,10 +173,10 @@ class _OrderCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Total', style: TextStyle(color: AppColors.foregroundMuted)),
+              Text('Total', style: TextStyle(color: AppColors.foregroundMuted)),
               Text(
                 formatRs(order.total),
-                style: const TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700, fontSize: 16),
+                style: TextStyle(color: AppColors.gold, fontWeight: FontWeight.w700, fontSize: 16),
               ),
             ],
           ),

@@ -31,7 +31,7 @@ class AppTheme {
   }
 
   static ThemeData get dark {
-    final base = ThemeData.dark(useMaterial3: true);
+    final base = AppColors.isLight ? ThemeData.light(useMaterial3: true) : ThemeData.dark(useMaterial3: true);
 
     return base.copyWith(
       scaffoldBackgroundColor: AppColors.background,
@@ -70,22 +70,39 @@ class AppTheme {
         entryModeIconColor: AppColors.gold,
         helpTextStyle: GoogleFonts.figtree(color: AppColors.foregroundMuted),
       ),
-      datePickerTheme: const DatePickerThemeData(
+      datePickerTheme: DatePickerThemeData(
         backgroundColor: AppColors.surface,
         headerBackgroundColor: AppColors.surfaceAlt,
         headerForegroundColor: AppColors.foreground,
-        todayForegroundColor: WidgetStatePropertyAll(AppColors.gold),
+        // Selected day: solid accent circle with contrasting text (the
+        // number used to vanish — accent text on an accent circle).
+        dayForegroundColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected)
+              ? AppColors.background
+              : s.contains(WidgetState.disabled)
+                  ? AppColors.foregroundMuted.withValues(alpha: 0.35)
+                  : AppColors.foreground,
+        ),
+        dayBackgroundColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? AppColors.gold : null,
+        ),
+        todayForegroundColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? AppColors.background : AppColors.gold,
+        ),
+        todayBackgroundColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.selected) ? AppColors.gold : null,
+        ),
         todayBorder: BorderSide(color: AppColors.gold),
       ),
       textTheme: _textTheme(base.textTheme),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         elevation: 0,
         centerTitle: false,
         foregroundColor: AppColors.foreground,
       ),
-      dividerTheme: const DividerThemeData(color: AppColors.border, thickness: 1),
-      iconTheme: const IconThemeData(color: AppColors.foregroundMuted),
+      dividerTheme: DividerThemeData(color: AppColors.border, thickness: 1),
+      iconTheme: IconThemeData(color: AppColors.foregroundMuted),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.gold,
@@ -102,7 +119,7 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.foreground,
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: AppColors.border),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: const StadiumBorder(),
           textStyle: GoogleFonts.figtree(
@@ -118,20 +135,20 @@ class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: AppColors.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: AppColors.gold, width: 1.5),
+          borderSide: BorderSide(color: AppColors.gold, width: 1.5),
         ),
         hintStyle: GoogleFonts.figtree(color: AppColors.foregroundMuted.withValues(alpha: 0.6)),
         labelStyle: GoogleFonts.figtree(color: AppColors.foregroundMuted),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppColors.surface,
         selectedItemColor: AppColors.gold,
         unselectedItemColor: AppColors.foregroundMuted,
@@ -143,7 +160,7 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: AppColors.border),
         ),
       ),
       splashFactory: NoSplash.splashFactory,

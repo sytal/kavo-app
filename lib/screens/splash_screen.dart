@@ -43,14 +43,14 @@ class _SplashScreenState extends State<SplashScreen> {
             RichText(
               text: TextSpan(
                 style: TextStyle(fontFamily: displayFont, fontSize: 36, color: AppColors.foreground),
-                children: const [
+                children: [
                   TextSpan(text: 'Crunches '),
                   TextSpan(text: 'Cafe', style: TextStyle(color: AppColors.gold)),
                 ],
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'FAST FOOD · FAISALABAD',
               style: TextStyle(
                 color: AppColors.foregroundMuted,

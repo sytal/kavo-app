@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../services/business_service.dart';
+import '../../utils/links.dart';
 
 import '../../services/auth_service.dart';
 import '../../theme/app_colors.dart';
@@ -62,7 +64,7 @@ class _ProfileHeader extends StatelessWidget {
 
     return Row(
       children: [
-        const CircleAvatar(
+        CircleAvatar(
           radius: 32,
           backgroundColor: AppColors.gold,
           child: Icon(Icons.person, color: AppColors.background, size: 32),
@@ -106,23 +108,16 @@ class _VisitUsCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Visit Us'),
-            SizedBox(height: 12),
-            _InfoRow(
-              icon: Icons.location_on_outlined,
-              text: 'Gulberg Thana Road, Faisalabad',
-            ),
-            SizedBox(height: 12),
-            _InfoRow(
-              icon: Icons.access_time_rounded,
-              text: 'Daily, 1pm – 1am',
-            ),
-            SizedBox(height: 12),
-            _InfoRow(
-              icon: Icons.phone_outlined,
-              text: 'Call for reservations',
-            ),
+          children: [
+            const Text('Visit Us'),
+            const SizedBox(height: 12),
+            _InfoRow(icon: Icons.location_on_outlined, text: BusinessService.instance.address),
+            const SizedBox(height: 12),
+            _InfoRow(icon: Icons.access_time_rounded, text: BusinessService.instance.hoursLabel),
+            if (BusinessService.instance.phone.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _InfoRow(icon: Icons.phone_outlined, text: BusinessService.instance.phone),
+            ],
           ],
         ),
       ),
@@ -219,14 +214,14 @@ class _SettingsList extends StatelessWidget {
                 ListTile(
                   leading: Icon(items[i].icon, color: AppColors.gold),
                   title: Text(items[i].label),
-                  trailing: const Icon(
+                  trailing: Icon(
                     Icons.chevron_right,
                     color: AppColors.foregroundMuted,
                   ),
                   onTap: items[i].onTap,
                 ),
                 if (i != items.length - 1)
-                  const Divider(height: 1, color: AppColors.border),
+                  Divider(height: 1, color: AppColors.border),
               ],
             ),
         ],
@@ -246,26 +241,28 @@ class _SettingsItem {
 class _SocialRow extends StatelessWidget {
   const _SocialRow();
 
-  static const _icons = [
-    Icons.camera_alt_outlined,
-    Icons.facebook,
-    Icons.alternate_email,
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final b = BusinessService.instance;
+    final links = [
+      if (b.instagram.isNotEmpty) (Icons.camera_alt_outlined, 'Instagram', b.instagram),
+      if (b.facebook.isNotEmpty) (Icons.facebook, 'Facebook', b.facebook),
+      if (b.whatsappUrl.isNotEmpty) (Icons.chat_outlined, 'WhatsApp', b.whatsappUrl),
+      if (b.phone.isNotEmpty) (Icons.phone_outlined, 'Call', 'tel:${b.phone}'),
+    ];
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            for (final icon in _icons)
+            for (final (icon, label, url) in links)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColors.surfaceAlt,
-                  child: Icon(icon, color: AppColors.gold, size: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: IconButton(
+                  tooltip: label,
+                  onPressed: () => openLink(context, url),
+                  style: IconButton.styleFrom(backgroundColor: AppColors.surfaceAlt, minimumSize: const Size(44, 44)),
+                  icon: Icon(icon, color: AppColors.gold, size: 20),
                 ),
               ),
           ],

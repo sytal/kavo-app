@@ -31,7 +31,7 @@ class DishImage extends StatelessWidget {
         webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
         errorBuilder: (_, _, _) => const _Placeholder(),
         loadingBuilder: (context, child, progress) =>
-            progress == null ? child : const ColoredBox(color: AppColors.surfaceAlt),
+            progress == null ? child : ColoredBox(color: AppColors.surfaceAlt),
       );
     }
 
@@ -44,7 +44,7 @@ class _Placeholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ColoredBox(
+    return ColoredBox(
       color: AppColors.surfaceAlt,
       child: Center(child: Icon(Icons.restaurant_rounded, color: AppColors.foregroundMuted, size: 32)),
     );

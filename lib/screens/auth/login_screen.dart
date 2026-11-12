@@ -82,14 +82,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: AppColors.danger.withValues(alpha: 0.4)),
                     ),
-                    child: Text(_error!, style: const TextStyle(color: AppColors.danger)),
+                    child: Text(_error!, style: TextStyle(color: AppColors.danger)),
                   ),
                   const SizedBox(height: 16),
                 ],
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: AppColors.foreground),
+                  style: TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Email'),
                   validator: (v) => (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
                 ),
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  style: const TextStyle(color: AppColors.foreground),
+                  style: TextStyle(color: AppColors.foreground),
                   decoration: const InputDecoration(labelText: 'Password'),
                   validator: (v) => (v == null || v.isEmpty) ? 'Enter your password' : null,
                 ),
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: _loading ? null : _submit,
                   child: _loading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 18,
                           width: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.background),
@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.of(context).pop(true);
                       }
                     },
-                    child: const Text(
+                    child: Text(
                       "New here? Create an account",
                       style: TextStyle(color: AppColors.gold),
                     ),
