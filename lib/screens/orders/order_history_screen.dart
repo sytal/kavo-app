@@ -170,6 +170,17 @@ class _OrderCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
+          if (order.deliveryFee > 0)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Delivery', style: TextStyle(color: AppColors.foregroundMuted, fontSize: 13)),
+                  Text(formatRs(order.deliveryFee), style: TextStyle(color: AppColors.foreground, fontSize: 13)),
+                ],
+              ),
+            ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

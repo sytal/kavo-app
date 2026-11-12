@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../data/menu_item.dart';
 import '../utils/format.dart';
 
@@ -26,6 +28,41 @@ class CartService extends ChangeNotifier {
   static final CartService instance = CartService._();
 
   final List<CartLine> _lines = [];
+
+  static const _storeKey = 'cart_v1';
+
+  /// Restores the tray saved on this phone, so closing the app doesn't
+  /// empty it (same as the website's saved cart).
+  Future<void> load() async {
+    try {
+      final raw = (await SharedPreferences.getInstance()).getString(_storeKey);
+      if (raw == null) return;
+      _lines
+        ..clear()
+        ..addAll((jsonDecode(raw) as List).map((j) => CartLine(
+              item: MenuItem.fromJson(Map<String, dynamic>.from(j['item'] as Map)),
+              quantity: (j['quantity'] as num).toInt(),
+            )));
+      super.notifyListeners();
+    } catch (_) {}
+  }
+
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+    final data = jsonEncode([
+      for (final l in _lines)
+        {
+          'quantity': l.quantity,
+          'item': {
+            'id': l.item.id, 'name': l.item.name, 'category': l.item.category,
+            'description': l.item.description, 'price': l.item.price,
+            'image': l.item.image, 'tags': l.item.tags,
+          },
+        },
+    ]);
+    SharedPreferences.getInstance().then((p) => p.setString(_storeKey, data));
+  }
 
   List<CartLine> get lines => List.unmodifiable(_lines);
 

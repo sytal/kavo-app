@@ -85,6 +85,7 @@ class _ProfileHeader extends StatelessWidget {
         ),
         if (user != null)
           OutlinedButton(
+            style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12)),
             onPressed: () => AuthService.instance.logout(),
             child: const Text('Sign Out'),
           )

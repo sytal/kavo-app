@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'services/auth_service.dart';
 import 'services/menu_service.dart';
+import 'services/cart_service.dart';
 import 'services/business_service.dart';
 import 'services/theme_loader.dart';
 import 'theme/app_theme.dart';
@@ -10,6 +12,8 @@ import 'screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Fonts ship inside the app (assets/google_fonts); never fetch at runtime.
+  GoogleFonts.config.allowRuntimeFetching = false;
   // Use the colour theme picked in Admin > Appearance.
   await ThemeLoader.load();
   final iconBrightness = AppColors.isLight ? Brightness.dark : Brightness.light;
@@ -22,6 +26,7 @@ Future<void> main() async {
     ),
   );
   BusinessService.instance.load();
+  CartService.instance.load();
   // Restores a saved sign-in (if any) before the splash hands off to the
   // rest of the app, so Profile/Order History reflect the right state from
   // the first frame instead of flashing "signed out" then flipping.

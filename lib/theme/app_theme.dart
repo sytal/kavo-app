@@ -163,6 +163,14 @@ class AppTheme {
           side: BorderSide(color: AppColors.border),
         ),
       ),
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surfaceAlt,
+        selectedColor: AppColors.gold,
+        labelStyle: TextStyle(color: AppColors.foreground),
+        secondaryLabelStyle: TextStyle(color: AppColors.background),
+        side: BorderSide(color: AppColors.border),
+        checkmarkColor: AppColors.background,
+      ),
       splashFactory: NoSplash.splashFactory,
     );
   }

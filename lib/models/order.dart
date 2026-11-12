@@ -29,6 +29,7 @@ class CafeOrder {
   final String phone;
   final String? notes;
   final double total;
+  final double deliveryFee;
   final DateTime? createdAt;
   final List<OrderLineItem> items;
 
@@ -39,6 +40,7 @@ class CafeOrder {
     required this.phone,
     required this.notes,
     required this.total,
+    this.deliveryFee = 0,
     required this.createdAt,
     required this.items,
   });
@@ -50,6 +52,7 @@ class CafeOrder {
         phone: json['phone'] as String,
         notes: json['notes'] as String?,
         total: (json['total'] as num).toDouble(),
+        deliveryFee: (json['delivery_fee'] as num?)?.toDouble() ?? 0,
         createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'] as String) : null,
         items: ((json['items'] as List?) ?? [])
             .map((e) => OrderLineItem.fromJson(e as Map<String, dynamic>))
