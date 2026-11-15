@@ -17,6 +17,21 @@
 
 </div>
 
+## The KAVO project
+
+KAVO is split across **two repositories** that work together. The app gets its menu, orders, theme and business info from the website's API, so get both if you want to run the whole system.
+
+| Part | Stack | Repository | Try it |
+|---|---|---|---|
+| 🌐 **Website + Admin panel + API** | Laravel · React | [sytal/sytal-coffee](https://github.com/sytal/sytal-coffee) | [kavo.sytal.io](https://kavo.sytal.io) |
+| 📱 **Mobile app** *(you are here)* | Flutter · Android | [sytal/kavo-app](https://github.com/sytal/kavo-app) | [Download APK](https://github.com/sytal/kavo-app/releases/latest) |
+
+```bash
+# Clone both
+git clone https://github.com/sytal/sytal-coffee.git
+git clone https://github.com/sytal/kavo-app.git
+```
+
 ## Try the demo
 
 | Email | Password |
