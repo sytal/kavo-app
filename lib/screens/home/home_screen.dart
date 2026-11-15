@@ -63,9 +63,11 @@ class _Hero extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
+                // Fade into the page background so the title stays readable
+                // in both light and dark themes.
                 colors: [
                   Colors.transparent,
-                  Color(0xCC0C0B09),
+                  AppColors.background.withValues(alpha: 0.85),
                   AppColors.background,
                 ],
                 stops: [0.3, 0.75, 1.0],
@@ -212,8 +214,9 @@ class _CraveCard extends StatelessWidget {
               bottom: 10,
               child: Text(
                 caption,
-                style: TextStyle(
-                  color: AppColors.foreground,
+                // Always on the dark photo scrim, so always light text.
+                style: const TextStyle(
+                  color: Color(0xFFF5F1E8),
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
                 ),
