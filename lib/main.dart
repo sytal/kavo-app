@@ -34,16 +34,16 @@ Future<void> main() async {
   // Fetch the live menu in the background; the bundled menu shows until
   // it arrives (or if the server can't be reached).
   MenuService.instance.load();
-  runApp(const CrunchesCafeApp());
+  runApp(const KavoApp());
 }
 
-class CrunchesCafeApp extends StatelessWidget {
-  const CrunchesCafeApp({super.key});
+class KavoApp extends StatelessWidget {
+  const KavoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Crunches Cafe',
+      title: 'KAVO',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark, // built from AppColors, which already holds the active light/dark palette
       darkTheme: AppTheme.dark,

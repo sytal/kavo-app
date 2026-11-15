@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.crunchescafe" "\0"
-            VALUE "FileDescription", "crunches_cafe" "\0"
+            VALUE "CompanyName", "io.sytal" "\0"
+            VALUE "FileDescription", "kavo" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "crunches_cafe" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.crunchescafe. All rights reserved." "\0"
-            VALUE "OriginalFilename", "crunches_cafe.exe" "\0"
-            VALUE "ProductName", "crunches_cafe" "\0"
+            VALUE "InternalName", "kavo" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 io.sytal. All rights reserved." "\0"
+            VALUE "OriginalFilename", "kavo.exe" "\0"
+            VALUE "ProductName", "kavo" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

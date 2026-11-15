@@ -10,7 +10,7 @@ class AboutScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('About Crunches Cafe')),
+      appBar: AppBar(title: const Text('About KAVO')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -18,7 +18,7 @@ class AboutScreen extends StatelessWidget {
             Text('Built on Late Nights & Loaded Plates', style: textTheme.headlineSmall),
             const SizedBox(height: 16),
             Text(
-              "Crunches started on Gulberg Thana Road with one idea: Faisalabad "
+              "KAVO started on Gulberg Thana Road with one idea: Faisalabad "
               "deserved a late-night spot that didn't cut corners on flavor. No "
               "fuss, no pretense — just loaded fries, stacked burgers, and a "
               "kitchen that doesn't slow down after dark.",

@@ -364,8 +364,8 @@ class _ConfirmationView extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             when.isEmpty
-                ? "We'll see $who soon at Crunches Cafe."
-                : "We'll see $who on $when. Faisalabad's favorite fast food hangout is ready for you.",
+                ? "We'll see $who soon at KAVO."
+                : "We'll see $who on $when. Your coffee will be ready.",
             style: textTheme.bodyMedium?.copyWith(
               color: AppColors.foregroundMuted,
             ),

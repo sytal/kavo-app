@@ -1,7 +1,7 @@
-import 'package:crunches_cafe/data/menu_item.dart';
-import 'package:crunches_cafe/services/api_client.dart';
-import 'package:crunches_cafe/utils/format.dart';
-import 'package:crunches_cafe/utils/validators.dart';
+import 'package:kavo/data/menu_item.dart';
+import 'package:kavo/services/api_client.dart';
+import 'package:kavo/utils/format.dart';
+import 'package:kavo/utils/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'root_shell.dart';
 
-/// Brand splash — "Crunches Cafe" wordmark on the dark background, then
+/// Brand splash — KAVO logo (cup + energy bolt) and tagline on the dark background, then
 /// hands off to the bottom-nav shell. Pure UI, no real initialization work.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -40,20 +40,28 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RichText(
-              text: TextSpan(
-                style: TextStyle(fontFamily: displayFont, fontSize: 36, color: AppColors.foreground),
-                children: [
-                  TextSpan(text: 'Crunches '),
-                  TextSpan(text: 'Cafe', style: TextStyle(color: AppColors.gold)),
-                ],
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset('assets/images/kavo-mark.png', width: 44, height: 44, color: AppColors.gold),
+                const SizedBox(width: 12),
+                Text(
+                  'KAVO',
+                  style: TextStyle(
+                    fontFamily: displayFont,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 5,
+                    color: AppColors.foreground,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             Text(
-              'FAST FOOD · FAISALABAD',
+              'COFFEE BRINGS ENERGY',
               style: TextStyle(
-                color: AppColors.foregroundMuted,
+                color: AppColors.gold,
                 fontSize: 12,
                 letterSpacing: 3,
               ),

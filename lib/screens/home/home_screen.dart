@@ -85,14 +85,14 @@ class _Hero extends StatelessWidget {
                 SectionEyebrow(greeting),
                 const SizedBox(height: 10),
                 Text(
-                  'Crunches Cafe',
+                  'KAVO',
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
                         color: AppColors.foreground,
                       ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Faisalabad\'s favorite fast food hangout. Crispy. Loaded. Gone in minutes.',
+                  'Coffee Brings Energy. Handcrafted coffee, loaded fries and stacked burgers in Faisalabad.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.foregroundMuted,
                       ),
@@ -367,8 +367,8 @@ class _AboutTeaser extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Crunches Cafe started with a simple idea — fast food that actually hits. '
-                  'Every plate is loaded, every bite is fresh off the grill.',
+                  'KAVO started with a simple idea — coffee that brings energy and food that actually hits. '
+                  'Every cup is fresh, every plate is loaded.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.foregroundMuted,
                       ),

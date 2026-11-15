@@ -6,11 +6,11 @@ const List<MenuItem> menuItems = [
   // Loaded Fries
   MenuItem(
     id: 1,
-    name: 'The Crunches Loaded',
+    name: 'The KAVO Loaded',
     category: 'Loaded Fries',
     description: 'Crispy fries buried under melted cheese, beef crumble, and house sauce.',
     price: 'Rs. 650',
-    image: 'crunches-loaded.jpg',
+    image: 'kavo-loaded.jpg',
     tags: ['Fan Favorite', 'Extra Cheese', 'Shareable'],
   ),
   MenuItem(
@@ -44,7 +44,7 @@ const List<MenuItem> menuItems = [
   // Burgers
   MenuItem(
     id: 5,
-    name: 'Crunches Signature Stack',
+    name: 'KAVO Signature Stack',
     category: 'Burgers',
     description: 'Double beef patty, melted cheese, caramelized onions, house special sauce.',
     price: 'Rs. 950',
@@ -125,7 +125,7 @@ const List<MenuItem> menuItems = [
     description: 'Warm chocolate brownie, molten center, vanilla ice cream, chocolate drizzle.',
     price: 'Rs. 480',
     image: 'molten-brownie.jpg',
-    tags: ["Crunches' Classic", 'Molten Center', 'Warm'],
+    tags: ['KAVO Classic', 'Molten Center', 'Warm'],
   ),
   MenuItem(
     id: 14,

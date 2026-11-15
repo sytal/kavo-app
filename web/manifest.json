@@ -1,11 +1,11 @@
 {
-    "name": "Crunches Cafe",
-    "short_name": "Crunches",
+    "name": "KAVO",
+    "short_name": "KAVO",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0C0B09",
     "theme_color": "#0C0B09",
-    "description": "A new Flutter project.",
+    "description": "KAVO — Coffee Brings Energy. Order online and book a table.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

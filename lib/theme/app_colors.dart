@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Crunches Cafe colour palette. Starts as the website's "Classic Gold"
+/// KAVO colour palette. Starts as the website's "Classic Gold"
 /// dark theme and is replaced at launch by the theme chosen in
 /// Admin > Appearance (see ThemeLoader), so the app follows the website.
 class AppColors {

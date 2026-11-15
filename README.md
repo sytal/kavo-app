@@ -1,17 +1,19 @@
 <div align="center">
 
-# Crunches Cafe: Mobile App
+<img src="docs/brand/icon-1024.png" alt="KAVO app icon" width="120">
 
-A Flutter ordering app for Crunches Cafe, a fast-food cafe in Faisalabad. Customers browse the live menu, build a tray, place orders, track them and book tables. Menu, prices, theme and business info all come from the [admin panel](https://github.com/sytal/sytal-coffee), so the cafe updates the app without releasing a new version.
+# KAVO: Mobile App
 
-**Live web version:** _coming soon_ · **Android APK:** _see [Releases](https://github.com/sytal/crunches-cafe-app/releases)_ · **Backend:** [sytal-coffee](https://github.com/sytal/sytal-coffee)
+**Coffee Brings Energy.** The Flutter app for KAVO, a coffee and food cafe in Faisalabad. Customers browse the live menu, build a tray, place orders, track them and book tables. Menu, prices, theme and business info all come from the [admin panel](https://kavo-admin.sytal.io), so the cafe updates the app without releasing a new version.
+
+**📱 Android APK:** [Download from Releases](https://github.com/sytal/kavo-app/releases/latest) · **🌐 Website:** [kavo.sytal.io](https://kavo.sytal.io) · **⚙️ Backend:** [sytal-coffee](https://github.com/sytal/sytal-coffee)
 
 ![Flutter](https://img.shields.io/badge/Flutter-3-02569B?logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-3-0175C2?logo=dart&logoColor=white)
-![Android](https://img.shields.io/badge/Android-ready-3DDC84?logo=android&logoColor=white)
+![Android](https://img.shields.io/badge/Android-APK-3DDC84?logo=android&logoColor=white)
 ![Web](https://img.shields.io/badge/Web-ready-4285F4?logo=googlechrome&logoColor=white)
 
-![App screens, dark theme](docs/screenshots/strip-dark.jpg)
+![KAVO app screens](docs/screenshots/strip-dark.jpg)
 
 </div>
 
@@ -19,12 +21,13 @@ A Flutter ordering app for Crunches Cafe, a fast-food cafe in Faisalabad. Custom
 
 | Email | Password |
 |---|---|
-| `demo.customer@crunchescafe.com` | `DemoCustomer#2026` |
+| `demo.customer@kavo.sytal.io` | `DemoCustomer#2026` |
 
-This account already has a few orders, so *Order History* has something to show. The same login works on the website.
+This account already has a few orders, so *Order History* has something to show. The same login works on [kavo.sytal.io](https://kavo.sytal.io).
 
 ## Features
 
+- **Branded splash.** The KAVO logo (a coffee cup with an energy bolt) and the *Coffee Brings Energy* tagline.
 - **Live menu.** Category filters, search, dish tags and a detail page for every dish. Data comes from the API with images served by the backend.
 - **Tray and checkout.** Add dishes with quantities, change them in the tray and place a cash-on-delivery order. Prices are always recalculated on the server.
 - **Order history.** Every past order with its items, address, total and a live status (Pending, Preparing, Out for Delivery, Completed).
@@ -39,6 +42,8 @@ This account already has a few orders, so *Order History* has something to show.
 **Light theme**
 
 ![App screens, light theme](docs/screenshots/strip-light.jpg)
+
+<p align="center"><img src="docs/screenshots/splash.jpg" width="200" alt="Splash screen"><br><sub>Splash screen</sub></p>
 
 <table>
   <tr>
@@ -102,22 +107,22 @@ lib/
 **Requirements:** Flutter 3.x and a running copy of the [backend](https://github.com/sytal/sytal-coffee).
 
 ```bash
-git clone https://github.com/sytal/crunches-cafe-app.git
-cd crunches-cafe-app
+git clone https://github.com/sytal/kavo-app.git
+cd kavo-app
 flutter pub get
 ```
 
-Point the app at your backend with `API_BASE_URL`:
+Point the app at the backend with `API_BASE_URL`. Release builds use `https://kavo.sytal.io/api/v1`:
 
 ```bash
 # Run on a device or emulator
-flutter run --dart-define=API_BASE_URL=https://your-domain.com/api/v1
+flutter run --dart-define=API_BASE_URL=https://kavo.sytal.io/api/v1
 
 # Android release APK
-flutter build apk --release --dart-define=API_BASE_URL=https://your-domain.com/api/v1
+flutter build apk --release --dart-define=API_BASE_URL=https://kavo.sytal.io/api/v1
 
 # Web build
-flutter build web --release --dart-define=API_BASE_URL=https://your-domain.com/api/v1
+flutter build web --release --dart-define=API_BASE_URL=https://kavo.sytal.io/api/v1
 ```
 
 Without `API_BASE_URL`, the web build calls port `8011` on the host it was opened from. Mobile builds fall back to a local development address. On an Android emulator, use `http://10.0.2.2:8011/api/v1`.

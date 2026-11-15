@@ -74,18 +74,27 @@ class _ProfileHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(user != null ? user.name : 'Welcome!', style: textTheme.titleLarge),
+              // Shrinks (rather than truncates) a long name to fit beside the button.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(user != null ? user.name : 'Welcome!', style: textTheme.titleLarge, maxLines: 1),
+              ),
               const SizedBox(height: 4),
+              // Long emails stay on one line instead of breaking mid-word.
               Text(
                 user != null ? user.email : 'Sign in to place orders',
                 style: textTheme.bodySmall?.copyWith(color: AppColors.foregroundMuted),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
         ),
+        const SizedBox(width: 8),
         if (user != null)
           OutlinedButton(
-            style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12)),
+            style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12)),
             onPressed: () => AuthService.instance.logout(),
             child: const Text('Sign Out'),
           )
@@ -192,7 +201,7 @@ class _SettingsList extends StatelessWidget {
       ),
       _SettingsItem(
         Icons.info_outline,
-        'About Crunches Cafe',
+        'About KAVO',
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const AboutScreen()),
         ),
@@ -270,7 +279,7 @@ class _SocialRow extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Crunches Cafe · v1.0.0',
+          'KAVO · Coffee Brings Energy · v1.0.0',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.foregroundMuted,
               ),
